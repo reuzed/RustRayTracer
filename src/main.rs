@@ -1,18 +1,18 @@
 mod color;
-mod vec3;
 mod ray;
 mod utils;
+mod vec3;
 
-use std::io;
 use color::Color;
 use ray::Ray;
-use vec3::{Point3, Vec3};
+use std::io;
 use utils::lerp;
+use vec3::{Point3, Vec3};
 
 fn ray_color(r: &Ray) -> Color {
     let unit_direction = vec3::unit_vector(r.direction());
     let t = 0.5 * (unit_direction.y() + 1.0);
-    lerp(Color::new(1.0,1.0,1.0), Color::new(0.5,0.7,0.2), t)
+    lerp(Color::new(1.0, 1.0, 1.0), Color::new(0.5, 0.7, 0.2), t)
 }
 
 fn main() {
@@ -31,7 +31,8 @@ fn main() {
     let origin = Vec3::new(0.0, 0.0, 0.0);
     let horizontal = Vec3::new(viewport_width, 0.0, 0.0);
     let vertical = Vec3::new(0.0, viewport_height, 0.0);
-    let lower_left_corner = origin - horizontal / 2.0 - vertical / 2.0 - Vec3::new(0.0, 0.0, focal_length);
+    let lower_left_corner =
+        origin - horizontal / 2.0 - vertical / 2.0 - Vec3::new(0.0, 0.0, focal_length);
 
     // Render
 
@@ -42,8 +43,8 @@ fn main() {
             let u = i as f64 / (IMAGE_WIDTH - 1) as f64;
             let v = j as f64 / (IMAGE_HEIGHT - 1) as f64;
             let r = Ray::new(
-                origin, 
-                lower_left_corner + u*horizontal + v*vertical - origin
+                origin,
+                lower_left_corner + u * horizontal + v * vertical - origin,
             );
             let pixel_color = ray_color(&r);
             color::write_color(&mut io::stdout(), pixel_color);

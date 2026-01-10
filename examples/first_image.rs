@@ -1,11 +1,10 @@
 // USAGE:
 // cargo run --example first_image > image.ppm
 
-use rust_ray_tracer::color;
 use color::Color;
+use rust_ray_tracer::color;
 
 use std::io;
-
 
 fn main() {
     // Image

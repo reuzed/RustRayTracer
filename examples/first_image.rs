@@ -3,7 +3,7 @@ fn main() {
 
     const IMAGE_WIDTH: i32 = 256;
     const IMAGE_HEIGHT: i32 = 256;
-    
+
     // Render
 
     print!("P3\n{} {}\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
@@ -20,7 +20,7 @@ fn main() {
             let ib = (255.999 * b) as i32;
 
             print!("{} {} {}\n", ir, ig, ib);
-        }   
-    } 
+        }
+    }
     eprintln!("Done.");
 }

@@ -4,3 +4,4 @@ pub mod utils;
 pub mod vec3;
 // raymarching
 pub mod sdf;
+pub mod raymarching;

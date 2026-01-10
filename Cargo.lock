@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "RustRayTracer"
+name = "rust_ray_tracer"
 version = "0.1.0"

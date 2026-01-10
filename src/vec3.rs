@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter, Result};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub};
 
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, Default, Debug)]
 pub struct Vec3 {
     e: [f64; 3],
 }
@@ -112,7 +112,6 @@ impl Add for Vec3 {
 
     fn add(self, v: Vec3) -> Vec3 {
         Vec3::new(self.x() + v.x(), self.y() + v.y(), self.z() + v.z())
-        // Special Vector Methods
     }
 }
 

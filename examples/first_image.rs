@@ -22,5 +22,5 @@ fn main() {
             print!("{} {} {}\n", ir, ig, ib);
         }   
     } 
-    eprintln!("Done.")
+    eprintln!("Done.");
 }

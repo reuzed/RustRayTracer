@@ -30,6 +30,26 @@ impl Vec3 {
     pub fn length_squared(&self) -> f64 {
         self.x() * self.x() + self.y() * self.y() + self.z() * self.z()
     }
+
+    pub fn abs(&self) -> Vec3 {
+        Vec3::new(self.x().abs(), self.y().abs(), self.z().abs())
+    }
+
+    pub fn max_element(&self) -> f64 {
+        self.x().max(self.y().max(self.z()))
+    }
+
+    pub fn max(&self, other: Vec3) -> Vec3 {
+        Vec3::new(
+            self.x().max(other.x()),
+            self.y().max(other.y()),
+            self.z().max(other.z()),
+        )
+    }
+
+    pub fn zero() -> Vec3 {
+        Vec3::new(0.0, 0.0, 0.0)
+    }
 }
 
 // Type alias

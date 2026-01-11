@@ -26,7 +26,7 @@ fn main() {
     // Image
 
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    const IMAGE_WIDTH: i32 = 256;
+    const IMAGE_WIDTH: i32 = 512;
     const IMAGE_HEIGHT: i32 = (IMAGE_WIDTH as f64 / ASPECT_RATIO) as i32;
 
     // Camera

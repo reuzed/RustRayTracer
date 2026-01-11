@@ -1,12 +1,12 @@
-mod color;
-mod constants;
-mod hittable;
-mod hittable_list;
-mod ray;
-mod sphere;
-mod utils;
-mod vec2;
-mod vec3;
+use rust_ray_tracer::color;
+use rust_ray_tracer::constants;
+use rust_ray_tracer::hittable;
+use rust_ray_tracer::hittable_list;
+use rust_ray_tracer::ray;
+use rust_ray_tracer::sphere;
+use rust_ray_tracer::utils;
+use rust_ray_tracer::vec2;
+use rust_ray_tracer::vec3;
 
 use color::Color;
 use hittable::{HitRecord, Hittable};
@@ -23,7 +23,7 @@ fn ray_color(r: &Ray, world: &dyn Hittable) -> Color {
     if world.hit(r, 0.0, INFINITY, &mut rec){
         return 0.5 * (rec.normal + Color::new(1.0,1.0,1.0))
     }
-    return Color::new(0.3,0.3,0.6)
+    return Color::new(0.1,0.1,0.2)
 }
 
 fn main() {

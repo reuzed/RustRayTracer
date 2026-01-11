@@ -14,11 +14,11 @@ impl Sphere {
 }
 
 impl Hittable for Sphere {
-    fn hit(&self, r: &Ray, t_min: f64, t_max: f64, &mut rec: HitRecord) -> bool {
-        let oc = r.origin() - centre;
+    fn hit(&self, r: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
+        let oc = r.origin() - self.center;
         let a = r.direction().length_squared();
         let half_b = vec3::dot(oc, r.direction());
-        let c = vec3::dot(oc, oc) - radius * radius;
+        let c = vec3::dot(oc, oc) - self.radius * self.radius;
         let quarter_discriminant = half_b * half_b - a * c;
         if quarter_discriminant < 0.0 {
             return false;

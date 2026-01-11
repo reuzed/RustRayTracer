@@ -1,13 +1,17 @@
 
 use rust_ray_tracer::color;
 use rust_ray_tracer::ray;
+use rust_ray_tracer::raymarching::march;
 use rust_ray_tracer::raymarching::march_simple;
 use rust_ray_tracer::sdf::sd_box;
 use rust_ray_tracer::sdf::translate;
+use rust_ray_tracer::sdf::union;
 use rust_ray_tracer::utils;
+use rust_ray_tracer::utils::remap;
 use rust_ray_tracer::vec3;
 
 use ray::Ray;
+use rust_ray_tracer::vec3::dot;
 use rust_ray_tracer::{color::Color, sdf::sd_sphere};
 use std::io;
 use utils::lerp;
@@ -42,6 +46,8 @@ fn main() {
 
     print!("P3\n{} {}\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
 
+    
+    
     for j in (0..IMAGE_HEIGHT).rev() {
         for i in (0..IMAGE_WIDTH).rev() {
             let u = i as f64 / (IMAGE_WIDTH - 1) as f64;
@@ -50,10 +56,25 @@ fn main() {
                 origin,
                 lower_left_corner + u * horizontal + v * vertical - origin,
             );
-            // let sdf = sd_sphere(0.5);
-            let sdf = sd_box(Vec3::new(0.3, 0.3, 0.3));
-            let sdf = translate(sdf, Vec3::new(0.0, 0.0, -1.0));
-            let pixel_color = if march_simple(r, sdf) {Color::new(1.0, 1.0, 1.0)} else {Color::new(0.0, 0.0, 0.0)};
+            
+            let sdf1 = sd_sphere(0.5);
+            let sdf1 = translate(sdf1, Vec3::new(0.0, 0.0, -1.0));
+            let sdf2 = sd_box(Vec3::new(0.3, 0.3, 0.3));
+            let sdf2 = translate(sdf2, Vec3::new(1.0, 0.0, -1.5));
+            let sdf = union(sdf1, sdf2);
+            let march_result = march(r, sdf);
+            
+            let pixel_color: Color = {
+                if march_result.hit {
+                    let t = dot(march_result.normal.unwrap(), Vec3::new(0.0, 0.0, 1.0));
+                    lerp(Color::new(0.0, 0.0, 0.0), Color::new(1.0, 0.3, 0.1), t)
+                }
+                else {
+                    lerp(Color::new(0.7, 0.8, 1.0), Color::new(0.6, 0.6, 0.6), remap(march_result.steps as f64, 0.0, 20.0, 0.0, 1.0))
+                }
+            };
+            
+
             color::write_color(&mut io::stdout(), pixel_color);
         }
     }

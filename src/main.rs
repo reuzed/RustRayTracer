@@ -1,6 +1,7 @@
 mod color;
 mod ray;
 mod utils;
+mod vec2;
 mod vec3;
 
 use color::Color;

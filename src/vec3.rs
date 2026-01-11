@@ -1,6 +1,10 @@
 use std::fmt::{Display, Formatter, Result};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub};
 
+use crate::vec2;
+
+use vec2::Vec2;
+
 #[derive(Copy, Clone, Default, Debug)]
 pub struct Vec3 {
     e: [f64; 3],
@@ -21,6 +25,18 @@ impl Vec3 {
 
     pub fn z(&self) -> f64 {
         self.e[2]
+    }
+
+    pub fn xy(&self) -> Vec2 {
+        Vec2::new(self.x(), self.y())
+    }
+
+    pub fn yz(&self) -> Vec2 {
+        Vec2::new(self.y(), self.z())
+    }
+
+    pub fn xz(&self) -> Vec2 {
+        Vec2::new(self.x(), self.z())
     }
 
     pub fn length(&self) -> f64 {

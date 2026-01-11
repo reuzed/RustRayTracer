@@ -1,12 +1,15 @@
 // Module for signed disance fields, representing various shapes
 
-use crate::{vec2::Vec2, vec3::{Point3, Vec3, unit_vector}};
+use crate::{
+    vec2::Vec2,
+    vec3::{Point3, Vec3, unit_vector},
+};
 
 pub trait Sdf: Fn(Vec3) -> f64 + 'static {}
-impl <F: Fn(Vec3) -> f64 + 'static> Sdf for F {}
+impl<F: Fn(Vec3) -> f64 + 'static> Sdf for F {}
 
 pub fn translate(sdf: impl Sdf, offset: Vec3) -> impl Sdf {
-    move |point| sdf(point-offset) 
+    move |point| sdf(point - offset)
 }
 
 pub fn sd_sphere(radius: f64) -> impl Sdf {
@@ -28,7 +31,7 @@ pub fn sd_torus(t: Vec2) -> impl Sdf {
     }
 }
 
-pub fn union(sdf1: impl Sdf , sdf2: impl Sdf) -> impl Sdf{
+pub fn union(sdf1: impl Sdf, sdf2: impl Sdf) -> impl Sdf {
     move |point| sdf1(point).min(sdf2(point))
 }
 
@@ -39,8 +42,8 @@ pub fn normal(sdf: impl Sdf, point: Point3) -> Vec3 {
     let dz = Vec3::new(0.0, 0.0, DELTA);
     let d = sdf(point);
     unit_vector(Vec3::new(
-        d-sdf(point - dx), 
-        d-sdf(point - dy),
-        d-sdf(point - dz)
+        d - sdf(point - dx),
+        d - sdf(point - dy),
+        d - sdf(point - dz),
     ))
 }

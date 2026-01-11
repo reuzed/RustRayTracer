@@ -1,4 +1,3 @@
-
 use rust_ray_tracer::color;
 use rust_ray_tracer::ray;
 use rust_ray_tracer::raymarching::march_simple;
@@ -53,7 +52,11 @@ fn main() {
             // let sdf = sd_sphere(0.5);
             let sdf = sd_box(Vec3::new(0.3, 0.3, 0.3));
             let sdf = translate(sdf, Vec3::new(0.0, 0.0, -1.0));
-            let pixel_color = if march_simple(r, sdf) {Color::new(1.0, 1.0, 1.0)} else {Color::new(0.0, 0.0, 0.0)};
+            let pixel_color = if march_simple(r, sdf) {
+                Color::new(1.0, 1.0, 1.0)
+            } else {
+                Color::new(0.0, 0.0, 0.0)
+            };
             color::write_color(&mut io::stdout(), pixel_color);
         }
     }

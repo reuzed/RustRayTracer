@@ -6,5 +6,5 @@ pub mod vec2;
 pub mod vec3;
 
 // raymarching
-pub mod sdf;
 pub mod raymarching;
+pub mod sdf;

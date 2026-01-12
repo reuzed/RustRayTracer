@@ -9,21 +9,21 @@ mod vec2;
 mod vec3;
 
 use color::Color;
+use constants::INFINITY;
 use hittable::{HitRecord, Hittable};
 use hittable_list::HittableList;
 use ray::Ray;
 use sphere::Sphere;
 use std::io;
 use vec3::{Point3, Vec3};
-use constants::INFINITY;
 
 fn ray_color(r: &Ray, world: &dyn Hittable) -> Color {
     let mut rec = HitRecord::new();
 
-    if world.hit(r, 0.0, INFINITY, &mut rec){
-        return 0.5 * (rec.normal + Color::new(1.0,1.0,1.0))
+    if world.hit(r, 0.0, INFINITY, &mut rec) {
+        return 0.5 * (rec.normal + Color::new(1.0, 1.0, 1.0));
     }
-    return Color::new(0.3,0.3,0.6)
+    return Color::new(0.3, 0.3, 0.6);
 }
 
 fn main() {
@@ -32,7 +32,7 @@ fn main() {
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
     const IMAGE_WIDTH: i32 = 512;
     const IMAGE_HEIGHT: i32 = (IMAGE_WIDTH as f64 / ASPECT_RATIO) as i32;
-    
+
     // World
     let mut world = HittableList::new();
     world.add(Box::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5)));

@@ -1,4 +1,4 @@
-use crate::hittable::{Hittable, HitRecord};
+use crate::hittable::{HitRecord, Hittable};
 use crate::ray::Ray;
 use crate::vec3::{self, Point3};
 
@@ -9,7 +9,10 @@ pub struct Sphere {
 
 impl Sphere {
     pub fn new(center: Point3, r: f64) -> Sphere {
-        Sphere{center: center, radius: r}
+        Sphere {
+            center: center,
+            radius: r,
+        }
     }
 }
 
@@ -22,20 +25,18 @@ impl Hittable for Sphere {
         let quarter_discriminant = half_b * half_b - a * c;
         if quarter_discriminant < 0.0 {
             return false;
-        } 
+        }
 
         let sqrt_d = f64::sqrt(quarter_discriminant);
 
         // find the nearest root that lies in the acceptable range
         let root1 = (-half_b - sqrt_d) / a;
         let root2 = (-half_b + sqrt_d) / a;
-        if  t_min <= root1 && root1 <= t_max {
+        if t_min <= root1 && root1 <= t_max {
             rec.t = root1;
-        }
-        else if t_min <= root2 && root2 <= t_max {
+        } else if t_min <= root2 && root2 <= t_max {
             rec.t = root2;
-        }
-        else {
+        } else {
             return false;
         }
 

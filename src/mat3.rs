@@ -2,7 +2,7 @@ use crate::vec3::{Vec3, dot};
 
 #[derive(Debug, Default)]
 pub struct Mat3 {
-    m: [[f64; 3]; 3]
+    m: [[f64; 3]; 3],
 }
 
 impl Mat3 {
@@ -12,7 +12,7 @@ impl Mat3 {
                 [r0.x(), r0.y(), r0.z()],
                 [r1.x(), r1.y(), r1.z()],
                 [r2.x(), r2.y(), r2.z()],
-            ]
+            ],
         }
     }
 
@@ -21,10 +21,8 @@ impl Mat3 {
     }
 
     pub fn id() -> Mat3 {
-        Mat3{
-            m:[[1.0, 0.0, 0.0],
-            [1.0, 0.0, 0.0],
-            [1.0, 0.0, 0.0],]
+        Mat3 {
+            m: [[1.0, 0.0, 0.0], [1.0, 0.0, 0.0], [1.0, 0.0, 0.0]],
         }
     }
 
@@ -35,12 +33,12 @@ impl Mat3 {
                 [r0[0], r1[0], r2[0]],
                 [r0[1], r1[1], r2[1]],
                 [r0[2], r1[2], r2[2]],
-            ]
+            ],
         }
     }
 
     pub fn mat_mul(&self, other: Mat3) -> Mat3 {
-        // Return self * other 
+        // Return self * other
         // Transpose other to get its column vectors, do vector multiplications, then form into matrix
         let ot = other.transpose();
         Mat3::new(
@@ -62,40 +60,29 @@ impl Mat3 {
 pub fn x_rot_mat(theta: f64) -> Mat3 {
     let c = f64::cos(theta);
     let s = f64::sin(theta);
-    Mat3{
-        m:[
-            [1.0, 0.0, 0.0],
-            [0.0, c, s],
-            [0.0, -s, c],
-        ]
+    Mat3 {
+        m: [[1.0, 0.0, 0.0], [0.0, c, s], [0.0, -s, c]],
     }
 }
 
 pub fn y_rot_mat(theta: f64) -> Mat3 {
     let c = f64::cos(theta);
     let s = f64::sin(theta);
-    Mat3{
-        m:[
-            [c, 0.0, s],
-            [0.0, 1.0, 0.0],
-            [-s, 0.0, c],
-        ]
+    Mat3 {
+        m: [[c, 0.0, s], [0.0, 1.0, 0.0], [-s, 0.0, c]],
     }
 }
 
 pub fn z_rot_mat(theta: f64) -> Mat3 {
     let c = f64::cos(theta);
     let s = f64::sin(theta);
-    Mat3{
-        m:[
-            [c, s, 0.0],
-            [-s, c, 0.0],
-            [0.0, 0.0, 1.0],
-        ]
+    Mat3 {
+        m: [[c, s, 0.0], [-s, c, 0.0], [0.0, 0.0, 1.0]],
     }
 }
 
 pub fn rot_mat(theta_x: f64, theta_y: f64, theta_z: f64) -> Mat3 {
-    x_rot_mat(theta_x).mat_mul(y_rot_mat(theta_y)).mat_mul(z_rot_mat(theta_z))
+    x_rot_mat(theta_x)
+        .mat_mul(y_rot_mat(theta_y))
+        .mat_mul(z_rot_mat(theta_z))
 }
-

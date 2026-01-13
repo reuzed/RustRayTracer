@@ -8,8 +8,7 @@ use rust_ray_tracer::{
     hittable_list::HittableList,
     ray::Ray,
     sphere::Sphere,
-    utils,
-    vec2,
+    utils, vec2,
     vec3::{Point3, Vec3},
 };
 
@@ -23,7 +22,6 @@ fn ray_color(r: &Ray, world: &dyn Hittable) -> Color {
 }
 
 fn main() {
-
     // World
     let mut world = HittableList::new();
     world.add(Box::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5)));
@@ -32,23 +30,23 @@ fn main() {
     // Camera
 
     let camera = Camera::new(
-        Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 0.0, 4.0), 1.0, 2.0, 16.0/9.0
+        Vec3::new(0.0, 0.0, 0.0),
+        Vec3::new(0.0, 0.0, 4.0),
+        1.0,
+        2.0,
+        16.0 / 9.0,
     );
 
     let origin = camera.position.clone();
-    let renderer = Renderer::new(512, 16.0/9.0, camera);
+    let renderer = Renderer::new(512, 16.0 / 9.0, camera);
 
     // Render
 
     print!("{}", renderer.ppm_header());
 
-    for dir in renderer.directions_iter(){
-        let r = Ray::new(
-            origin,
-            dir,
-        );
+    for dir in renderer.directions_iter() {
+        let r = Ray::new(origin, dir);
         let pixel_color = ray_color(&r, &world);
         write_color(&mut io::stdout(), pixel_color);
     }
-
 }

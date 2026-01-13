@@ -16,7 +16,7 @@ use std::io;
 use utils::lerp;
 use vec3::Vec3;
 
-// Usage 
+// Usage
 // cargo run --example shaded_raymarch > shaded_raymarch.ppm
 
 fn main() {
@@ -41,7 +41,7 @@ fn main() {
     // Render
 
     print!("P3\n{} {}\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
-    
+
     for j in (0..IMAGE_HEIGHT).rev() {
         for i in (0..IMAGE_WIDTH).rev() {
             let u = i as f64 / (IMAGE_WIDTH - 1) as f64;

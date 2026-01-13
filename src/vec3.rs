@@ -192,3 +192,20 @@ pub fn cross(u: Vec3, v: Vec3) -> Vec3 {
 pub fn unit_vector(v: Vec3) -> Vec3 {
     v / v.length()
 }
+
+// project one vector onto another
+pub fn project(v: Vec3, n: Vec3) -> Vec3 {
+    // return the component of v in the direction of n
+    let n = unit_vector(n);
+    let vdn = dot(n, v);
+    vdn * n
+}
+
+pub fn orthogonalise(v: Vec3, b: Vec<Vec3>) -> Vec3 {
+    // remove the components of v in the directions in b, giving an orthogonal version
+    let mut ov = v;
+    for bv in &b {
+        ov = ov - project(ov, *bv);
+    }
+    ov
+}

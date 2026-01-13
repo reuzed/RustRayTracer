@@ -23,7 +23,7 @@ fn ray_color(r: &Ray, world: &dyn Hittable) -> Color {
 
 fn main() {
     // World
-    
+
     let mut world = HittableList::new();
     world.add(Box::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5)));
     world.add(Box::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0)));
@@ -31,8 +31,8 @@ fn main() {
     // Camera
 
     let camera = Camera::new(
-        Vec3::new(0.0, 0.0, 0.0),
-        Vec3::new(0.0, 0.0, 4.0),
+        Vec3::new(0.0, 2.0, -2.0),
+        Vec3::new(0.0, 0.0, -1.0),
         1.0,
         2.0,
         16.0 / 9.0,

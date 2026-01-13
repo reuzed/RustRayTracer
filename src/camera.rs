@@ -1,11 +1,11 @@
 use std::io;
 
-use crate::{color::{Color, write_color}, ray::Ray, vec3::{Point3, Vec3}};
+use crate::{color::{Color, write_color}, ray::Ray, vec3::{Point3, Vec3, cross, orthogonalise, unit_vector}};
 
 pub struct Camera {
-    pub position: Point3,
-    pub target: Point3,
-    aspect_ratio: f64,
+    position: Point3,
+    target: Point3,
+    pub aspect_ratio: f64,
     viewport_height: f64,
     viewport_width: f64,
     focal_length: f64,
@@ -13,7 +13,7 @@ pub struct Camera {
 
 pub struct Renderer {
     camera: Camera,
-    aspect_ratio: f64,
+    pub aspect_ratio: f64,
     image_width: u32,
     image_height: u32,
 }
@@ -26,7 +26,7 @@ impl Camera {
         viewport_width: f64,
         aspect_ratio: f64,
     ) -> Camera {
-        let viewport_height = viewport_width * aspect_ratio;
+        let viewport_height = viewport_width / aspect_ratio;
         Camera {
             position: pos,
             target: target,
@@ -39,31 +39,31 @@ impl Camera {
 
     pub fn horizontal(&self) -> Vec3 {
         // Cross between vector to target and vertical
-        // TODO add dependence on target
-        Vec3::new(self.viewport_width, 0.0, 0.0)
+        eprint!("pos: {}, target: {} \nvert: {} \nto_screen: {} \nhoriz: {}", self.position, self.target, self.vertical(), self.to_screen_center(), self.viewport_width * unit_vector(cross(self.to_screen_center(), self.vertical())));
+        self.viewport_width * unit_vector(cross(self.vertical(), self.to_screen_center()))
     }
 
     pub fn vertical(&self) -> Vec3 {
-        // TODO add dependence on target
         // Positive y-axis vector minus its projection onto vector pointing at target, normalised
         // Special case for camera pointing straight up or down...
-        Vec3::new(0.0, self.viewport_height, 0.0)
+        let up = Vec3::new(0.0, 1.0, 0.0);
+        let to_screen = self.to_screen_center();
+        let vertical_vec = orthogonalise(up, vec![to_screen]);
+        self.viewport_height * unit_vector(vertical_vec)
     }
 
     pub fn to_screen_center(&self) -> Vec3 {
-        // TODO add dependence on target
-        Vec3::new(0.0, 0.0, self.focal_length)
+        self.focal_length * unit_vector(self.target - self.position)
     }
 
     pub fn lower_left_corner(&self) -> Vec3 {
-        // I maybe misunderstand that the to_screen_centre vector is backwards
-        self.position - self.to_screen_center() - self.horizontal() / 2.0 - self.vertical() / 2.0
+        self.position + self.to_screen_center() - self.horizontal() / 2.0 - self.vertical() / 2.0
     }
 }
 
 impl Renderer {
     pub fn new(image_width: u32, aspect_ratio: f64, camera: Camera) -> Renderer {
-        let image_height = (image_width as f64 * aspect_ratio) as u32;
+        let image_height = (image_width as f64 / aspect_ratio) as u32;
         Renderer {
             camera,
             aspect_ratio,

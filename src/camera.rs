@@ -1,4 +1,6 @@
-use crate::vec3::{Point3, Vec3};
+use std::io;
+
+use crate::{color::{Color, write_color}, ray::Ray, vec3::{Point3, Vec3}};
 
 pub struct Camera {
     pub position: Point3,
@@ -74,24 +76,28 @@ impl Renderer {
         format!("P3\n{} {}\n255\n", self.image_width, self.image_height)
     }
 
-    pub fn directions_iter(&self) -> impl Iterator<Item = Vec3> {
+    pub fn rays_iter(&self) -> impl Iterator<Item = Ray> {
         let horizontal = self.camera.horizontal();
         let vertical = self.camera.vertical();
         let lower_left_corner = self.camera.lower_left_corner();
+        let origin = self.camera.position;
         (0..self.image_height).rev().flat_map(move |j| {
             (0..self.image_width).rev().map(move |i| {
                 let u = i as f64 / (self.image_width - 1) as f64;
                 let v = j as f64 / (self.image_height - 1) as f64;
                 let direction =
                     lower_left_corner + u * horizontal + v * vertical - self.camera.position;
-                direction
+                Ray::new(origin, direction)
             })
         })
     }
-}
 
-// impl Renderer {
-//     pub fn iter(&self) -> impl Iterator<Item = &T> {
-//         self.data.iter().flat_map(|row| row.iter())
-//     }
-// }
+    pub fn render_to_ppm(&self, ray_to_col: impl Fn(Ray) -> Color) {
+        print!("{}", self.ppm_header());
+
+        for ray in self.rays_iter() {
+            let pixel_color: Color = ray_to_col(ray);
+            write_color(&mut io::stdout(), pixel_color);
+        }
+    }
+}

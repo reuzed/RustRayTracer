@@ -5,8 +5,15 @@ use crate::{color::{Color, write_color}, ray::Ray, vec3::{Point3, Vec3, cross, o
 pub struct Camera {
     position: Point3,
     target: Point3,
-    pub aspect_ratio: f64,
     viewport_height: f64,
+    viewport_width: f64,
+    focal_length: f64,
+}
+
+pub struct CameraBuilder {
+    position: Point3,
+    target: Point3,
+    aspect_ratio: f64,
     viewport_width: f64,
     focal_length: f64,
 }
@@ -30,11 +37,14 @@ impl Camera {
         Camera {
             position: pos,
             target: target,
-            aspect_ratio: aspect_ratio,
             viewport_width: viewport_width,
             viewport_height: viewport_height,
             focal_length: focal_length,
         }
+    }
+
+    pub fn aspect_ratio(&self) -> f64 {
+        self.viewport_width / self.viewport_height
     }
 
     pub fn horizontal(&self) -> Vec3 {
@@ -58,6 +68,30 @@ impl Camera {
 
     pub fn lower_left_corner(&self) -> Vec3 {
         self.position + self.to_screen_center() - self.horizontal() / 2.0 - self.vertical() / 2.0
+    }
+}
+
+impl CameraBuilder {
+    pub fn new() -> CameraBuilder {
+        CameraBuilder {
+            position: Vec3::new(1.0, 1.0, 1.0),
+            target: Vec3::new(0.0,0.0,0.0),
+            aspect_ratio: 16.0 / 9.0,
+            viewport_width: 2.0,
+            focal_length: 1.0,
+        }
+    }
+
+    pub fn position(mut self, pos: Vec3) {
+        self.position = pos
+    }
+
+    pub fn target(mut self, target: Vec3) {
+        self.target = target
+    }
+
+    pub fn build(&self) -> Camera {
+        Camera::new(self.position, self.target, self.focal_length, self.viewport_width, self.aspect_ratio)
     }
 }
 

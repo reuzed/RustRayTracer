@@ -1,5 +1,3 @@
-use std::ops::Mul;
-
 use crate::vec3::{Vec3, dot};
 
 #[derive(Debug, Default)]
@@ -46,9 +44,9 @@ impl Mat3 {
         // Transpose other to get its column vectors, do vector multiplications, then form into matrix
         let ot = other.transpose();
         Mat3::new(
-            self.mul(Vec3::from_arr(ot[0])),
-            self.mul(Vec3::from_arr(ot[1])),
-            self.mul(Vec3::from_arr(ot[2])),
+            self.mul(Vec3::from_arr(ot.m[0])),
+            self.mul(Vec3::from_arr(ot.m[1])),
+            self.mul(Vec3::from_arr(ot.m[2])),
         )
     }
 

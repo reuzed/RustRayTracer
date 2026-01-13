@@ -22,7 +22,7 @@ impl Mat3 {
 
     pub fn id() -> Mat3 {
         Mat3 {
-            m: [[1.0, 0.0, 0.0], [1.0, 0.0, 0.0], [1.0, 0.0, 0.0]],
+            m: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
         }
     }
 
@@ -85,4 +85,27 @@ pub fn rot_mat(theta_x: f64, theta_y: f64, theta_z: f64) -> Mat3 {
     x_rot_mat(theta_x)
         .mat_mul(y_rot_mat(theta_y))
         .mat_mul(z_rot_mat(theta_z))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::vec3::Vec3;
+
+    const EPS: f64 = 1e-12;
+
+    fn assert_vec3_eq(a: Vec3, b: Vec3) {
+        assert!((a.x() - b.x()).abs() < EPS);
+        assert!((a.y() - b.y()).abs() < EPS);
+        assert!((a.z() - b.z()).abs() < EPS);
+    }
+
+    #[test]
+    fn identity_matrix_vector_mul() {
+        let v = Vec3::new(1.2, -3.4, 5.6);
+        let id = Mat3::id();
+
+        let result = id.mul(v);
+        assert_vec3_eq(result, v);
+    }
 }

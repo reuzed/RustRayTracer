@@ -1,0 +1,87 @@
+use crate::vec3::{Point3, Vec3};
+
+pub struct Camera {
+    pub position: Point3,
+    pub target: Point3,
+    aspect_ratio: f64,
+    viewport_height: f64, 
+    viewport_width: f64,
+    focal_length: f64
+}
+
+pub struct Renderer {
+    camera: Camera,
+    aspect_ratio: f64,
+    image_width: u32, 
+    image_height: u32,
+}
+
+impl Camera {
+    pub fn new(pos: Point3, target: Point3, focal_length: f64, viewport_width: f64, aspect_ratio: f64) -> Camera{
+        let viewport_height = viewport_width * aspect_ratio;
+        Camera {
+            position: pos, 
+            target: target,
+            aspect_ratio: aspect_ratio,
+            viewport_width: viewport_width,
+            viewport_height: viewport_height,
+            focal_length: focal_length,
+        }
+    }
+
+    pub fn horizontal(&self) -> Vec3 {
+        // Cross between vector to target and vertical
+        // TODO add dependence on target
+        Vec3::new(self.viewport_width, 0.0, 0.0)
+    }
+
+    pub fn vertical(&self) -> Vec3 {
+        // TODO add dependence on target
+        // Positive y-axis vector minus its projection onto vector pointing at target, normalised
+        // Special case for camera pointing straight up or down...
+        Vec3::new(0.0, self.viewport_height, 0.0)
+    }
+
+    pub fn to_screen_center(&self) -> Vec3 {
+        // TODO add dependence on target
+        Vec3::new(0.0, 0.0, self.focal_length)
+    }
+
+    pub fn lower_left_corner(&self) -> Vec3 {
+        // I maybe misunderstand that the to_screen_centre vector is backwards
+        self.position - self.to_screen_center() - self.horizontal() / 2.0 - self.vertical() / 2.0
+    }
+
+}
+
+impl Renderer {
+    pub fn new(image_width: u32, aspect_ratio: f64, camera: Camera) -> Renderer {
+        let image_height = (image_width as f64 * aspect_ratio) as u32;
+        Renderer { camera, aspect_ratio, image_width, image_height }
+    }
+
+    pub fn ppm_header(&self) -> String {
+        format!("P3\n{} {}\n255\n", self.image_width, self.image_height)
+    }
+
+    pub fn directions_iter(&self) -> impl Iterator<Item = Vec3> {
+        let horizontal = self.camera.horizontal();
+        let vertical = self.camera.vertical();
+        let lower_left_corner = self.camera.lower_left_corner();
+        (0..self.image_height).rev().flat_map(
+            move |j| (0..self.image_width).rev().map(
+                move |i| {
+                let u = i as f64 / (self.image_width - 1) as f64;
+                let v = j as f64 / (self.image_height - 1) as f64;
+                let direction = lower_left_corner + u * horizontal + v * vertical - self.camera.position;
+                direction
+            } )
+        )
+    }
+}
+
+// impl Renderer {
+//     pub fn iter(&self) -> impl Iterator<Item = &T> {
+//         self.data.iter().flat_map(|row| row.iter())
+//     }
+// }

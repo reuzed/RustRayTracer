@@ -1,21 +1,17 @@
-mod color;
-mod constants;
-mod hittable;
-mod hittable_list;
-mod ray;
-mod sphere;
-mod utils;
-mod vec2;
-mod vec3;
-
-use color::Color;
-use constants::INFINITY;
-use hittable::{HitRecord, Hittable};
-use hittable_list::HittableList;
-use ray::Ray;
-use sphere::Sphere;
 use std::io;
-use vec3::{Point3, Vec3};
+
+use rust_ray_tracer::{
+    camera::{Camera, Renderer},
+    color::{Color, write_color},
+    constants::INFINITY,
+    hittable::{HitRecord, Hittable},
+    hittable_list::HittableList,
+    ray::Ray,
+    sphere::Sphere,
+    utils,
+    vec2,
+    vec3::{Point3, Vec3},
+};
 
 fn ray_color(r: &Ray, world: &dyn Hittable) -> Color {
     let mut rec = HitRecord::new();
@@ -27,11 +23,6 @@ fn ray_color(r: &Ray, world: &dyn Hittable) -> Color {
 }
 
 fn main() {
-    // Image
-
-    const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    const IMAGE_WIDTH: i32 = 512;
-    const IMAGE_HEIGHT: i32 = (IMAGE_WIDTH as f64 / ASPECT_RATIO) as i32;
 
     // World
     let mut world = HittableList::new();
@@ -40,30 +31,24 @@ fn main() {
 
     // Camera
 
-    let viewport_height = 2.0;
-    let viewport_width = viewport_height * ASPECT_RATIO;
-    let focal_length = 1.0;
+    let camera = Camera::new(
+        Vec3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 0.0, 4.0), 1.0, 2.0, 16.0/9.0
+    );
 
-    let origin = Vec3::new(0.0, 0.0, 0.0);
-    let horizontal = Vec3::new(viewport_width, 0.0, 0.0);
-    let vertical = Vec3::new(0.0, viewport_height, 0.0);
-    let lower_left_corner =
-        origin - horizontal / 2.0 - vertical / 2.0 - Vec3::new(0.0, 0.0, focal_length);
+    let origin = camera.position.clone();
+    let renderer = Renderer::new(512, 16.0/9.0, camera);
 
     // Render
 
-    print!("P3\n{} {}\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
+    print!("{}", renderer.ppm_header());
 
-    for j in (0..IMAGE_HEIGHT).rev() {
-        for i in (0..IMAGE_WIDTH).rev() {
-            let u = i as f64 / (IMAGE_WIDTH - 1) as f64;
-            let v = j as f64 / (IMAGE_HEIGHT - 1) as f64;
-            let r = Ray::new(
-                origin,
-                lower_left_corner + u * horizontal + v * vertical - origin,
-            );
-            let pixel_color = ray_color(&r, &world);
-            color::write_color(&mut io::stdout(), pixel_color);
-        }
+    for dir in renderer.directions_iter(){
+        let r = Ray::new(
+            origin,
+            dir,
+        );
+        let pixel_color = ray_color(&r, &world);
+        write_color(&mut io::stdout(), pixel_color);
     }
+
 }

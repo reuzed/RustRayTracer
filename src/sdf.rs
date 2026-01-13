@@ -1,8 +1,7 @@
 // Module for signed disance fields, representing various shapes
 
 use crate::{
-    vec2::Vec2,
-    vec3::{Point3, Vec3, unit_vector},
+    mat3::rot_mat, utils::gradians_to_radians, vec2::Vec2, vec3::{Point3, Vec3, unit_vector}
 };
 
 pub trait Sdf: Fn(Vec3) -> f64 + 'static {}
@@ -12,12 +11,17 @@ pub fn translate(sdf: impl Sdf, offset: Vec3) -> impl Sdf {
     move |point| sdf(point - offset)
 }
 
-fn transform(sdf: impl Sdf, matrix: [[f64; 3]; 3]) -> impl Sdf {
-    sdf
-}
+// fn transform(sdf: impl Sdf, matrix: [[f64; 3]; 3]) -> impl Sdf {
+//     sdf
+// }
 
-pub fn rotate(sdf: impl Sdf, matrix: [[f64; 3]; 3]) -> impl Sdf {
-    sdf
+pub fn rotate(sdf: impl Sdf, theta_x: f64, theta_y: f64, theta_z: f64) -> impl Sdf {
+    // Rotate around the z, then y, then x axes by MINUS theta_{} gradians
+    let (theta_x, theta_y, theta_z) = (gradians_to_radians(theta_x), gradians_to_radians(theta_y), gradians_to_radians(theta_z));
+    move |point| {
+        let new_point = rot_mat(-theta_x, -theta_y, -theta_z).mul(point);
+        sdf(new_point)
+    }
 }
 
 pub fn sd_sphere(radius: f64) -> impl Sdf {

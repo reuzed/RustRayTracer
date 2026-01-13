@@ -12,6 +12,14 @@ pub fn translate(sdf: impl Sdf, offset: Vec3) -> impl Sdf {
     move |point| sdf(point - offset)
 }
 
+fn transform(sdf: impl Sdf, matrix: [[f64; 3]; 3]) -> impl Sdf {
+    sdf
+}
+
+pub fn rotate(sdf: impl Sdf, matrix: [[f64; 3]; 3]) -> impl Sdf {
+    sdf
+}
+
 pub fn sd_sphere(radius: f64) -> impl Sdf {
     move |point| point.length() - radius
 }

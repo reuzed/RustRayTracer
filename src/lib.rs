@@ -8,6 +8,7 @@ pub mod sphere;
 pub mod utils;
 pub mod vec2;
 pub mod vec3;
+pub mod mat3;
 
 // raymarching
 pub mod raymarching;

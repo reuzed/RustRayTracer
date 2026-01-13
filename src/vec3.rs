@@ -15,6 +15,10 @@ impl Vec3 {
         Vec3 { e: [x, y, z] }
     }
 
+    pub fn from_arr(r: [f64; 3]) -> Vec3 {
+        Vec3 { e: r }
+    }
+
     pub fn x(&self) -> f64 {
         self.e[0]
     }

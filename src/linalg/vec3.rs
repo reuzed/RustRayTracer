@@ -201,6 +201,10 @@ pub fn project(v: Vec3, n: Vec3) -> Vec3 {
     vdn * n
 }
 
+pub fn reflect(v: Vec3, n: Vec3) -> Vec3 {
+    v - 2.0 * project(v, n)
+}
+
 pub fn orthogonalise(v: Vec3, b: Vec<Vec3>) -> Vec3 {
     // remove the components of v in the directions in b, giving an orthogonal version
     let mut ov = v;

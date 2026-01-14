@@ -5,6 +5,7 @@ use crate::linalg::vec3::{self, Point3, Vec3};
 pub struct HitRecord {
     pub hit: bool,
     pub p: Point3,
+    pub v: Vec3,
     pub normal: Vec3,
     pub t: f64,
     pub front_face: bool,

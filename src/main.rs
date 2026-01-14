@@ -1,25 +1,6 @@
-use std::io;
-
 use rust_ray_tracer::{
-    camera::{Camera, Renderer},
-    color::{Color, write_color},
-    constants::INFINITY,
-    hittable::{HitRecord, Hittable},
-    hittable_list::HittableList,
-    ray::Ray,
-    sphere::Sphere,
-    utils, vec2,
-    vec3::{Point3, Vec3},
+    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, shading::shade, sphere::Sphere, vec3::{Point3, Vec3}
 };
-
-fn ray_color(r: &Ray, world: &dyn Hittable) -> Color {
-    let mut rec = HitRecord::new();
-
-    if world.hit(r, 0.0, INFINITY, &mut rec) {
-        return 0.5 * (rec.normal + Color::new(1.0, 1.0, 1.0));
-    }
-    return Color::new(0.3, 0.3, 0.6);
-}
 
 fn main() {
     // World
@@ -42,5 +23,12 @@ fn main() {
 
     // Render
 
-    renderer.render_to_ppm(|ray| ray_color(&ray, &world));
+    renderer.render_to_ppm(|ray| {
+        let mut rec = HitRecord::new();
+
+        world.hit(&ray, 0.0, INFINITY, &mut rec);
+        
+        shade(rec)
+    }
+    )
 }

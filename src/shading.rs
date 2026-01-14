@@ -3,11 +3,10 @@
 
 use crate::{color::Color, hittable::HitRecord};
 
-pub fn shade (rec: HitRecord) -> Color {
+pub fn shade(rec: HitRecord) -> Color {
     if rec.hit {
         0.5 * (rec.normal + Color::new(1.0, 1.0, 1.0))
-    }
-    else {
+    } else {
         Color::new(0.3, 0.3, 0.6)
     }
 }

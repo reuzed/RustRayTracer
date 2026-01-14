@@ -1,6 +1,10 @@
 use std::io;
 
-use crate::{color::{Color, write_color}, ray::Ray, vec3::{Point3, Vec3, cross, orthogonalise, unit_vector}};
+use crate::{
+    color::{Color, write_color},
+    ray::Ray,
+    vec3::{Point3, Vec3, cross, orthogonalise, unit_vector},
+};
 
 pub struct Camera {
     position: Point3,
@@ -49,7 +53,14 @@ impl Camera {
 
     pub fn horizontal(&self) -> Vec3 {
         // Cross between vector to target and vertical
-        eprint!("pos: {}, target: {} \nvert: {} \nto_screen: {} \nhoriz: {}", self.position, self.target, self.vertical(), self.to_screen_center(), self.viewport_width * unit_vector(cross(self.to_screen_center(), self.vertical())));
+        eprint!(
+            "pos: {}, target: {} \nvert: {} \nto_screen: {} \nhoriz: {}",
+            self.position,
+            self.target,
+            self.vertical(),
+            self.to_screen_center(),
+            self.viewport_width * unit_vector(cross(self.to_screen_center(), self.vertical()))
+        );
         self.viewport_width * unit_vector(cross(self.vertical(), self.to_screen_center()))
     }
 
@@ -75,7 +86,7 @@ impl CameraBuilder {
     pub fn new() -> CameraBuilder {
         CameraBuilder {
             position: Vec3::new(1.0, 1.0, 1.0),
-            target: Vec3::new(0.0,0.0,0.0),
+            target: Vec3::new(0.0, 0.0, 0.0),
             aspect_ratio: 16.0 / 9.0,
             viewport_width: 2.0,
             focal_length: 1.0,
@@ -91,7 +102,13 @@ impl CameraBuilder {
     }
 
     pub fn build(&self) -> Camera {
-        Camera::new(self.position, self.target, self.focal_length, self.viewport_width, self.aspect_ratio)
+        Camera::new(
+            self.position,
+            self.target,
+            self.focal_length,
+            self.viewport_width,
+            self.aspect_ratio,
+        )
     }
 }
 

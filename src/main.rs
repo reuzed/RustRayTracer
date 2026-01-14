@@ -1,5 +1,11 @@
 use rust_ray_tracer::{
-    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, shading::shade, sphere::Sphere, vec3::{Point3, Vec3}
+    camera::{Camera, Renderer},
+    constants::INFINITY,
+    hittable::{HitRecord, Hittable},
+    hittable_list::HittableList,
+    shading::shade,
+    sphere::Sphere,
+    vec3::{Point3, Vec3},
 };
 
 fn main() {
@@ -27,8 +33,7 @@ fn main() {
         let mut rec = HitRecord::new();
 
         world.hit(&ray, 0.0, INFINITY, &mut rec);
-        
+
         shade(rec)
-    }
-    )
+    })
 }

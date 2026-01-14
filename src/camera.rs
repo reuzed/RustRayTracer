@@ -1,9 +1,9 @@
 use std::io;
 
 use crate::{
-    color::{Color, write_color},
+    shading::{Color, write_color},
     ray::Ray,
-    vec3::{Point3, Vec3, cross, orthogonalise, unit_vector},
+    linalg::vec3::{Point3, Vec3, cross, orthogonalise, unit_vector},
 };
 
 pub struct Camera {

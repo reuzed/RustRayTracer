@@ -5,7 +5,7 @@ use rust_ray_tracer::{
     hittable_list::HittableList,
     shading::shade,
     sphere::Sphere,
-    vec3::{Point3, Vec3},
+    linalg::vec3::{Point3, Vec3},
 };
 
 fn main() {

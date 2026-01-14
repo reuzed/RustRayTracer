@@ -1,4 +1,4 @@
-use crate::vec3::{Vec3, dot};
+use crate::linalg::vec3::{Vec3, dot};
 
 #[derive(Debug, Default)]
 pub struct Mat3 {
@@ -90,7 +90,7 @@ pub fn rot_mat(theta_x: f64, theta_y: f64, theta_z: f64) -> Mat3 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::vec3::Vec3;
+    use crate::linalg::vec3::Vec3;
 
     const EPS: f64 = 1e-12;
 

@@ -2,8 +2,8 @@
 
 use crate::{
     ray::Ray,
-    sdf::{Sdf, normal},
-    vec3::{Vec3, unit_vector},
+    raymarching::{Sdf, normal},
+    linalg::vec3::{Vec3, unit_vector},
 };
 
 const CLOSE_TOLERANCE: f64 = 0.00001;

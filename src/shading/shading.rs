@@ -1,7 +1,7 @@
 // Take in information about a point that a ray has intersected with
 // Compute how this point should be shaded
 
-use crate::{color::Color, hittable::HitRecord};
+use crate::{shading::Color, hittable::HitRecord};
 
 pub fn shade(rec: HitRecord) -> Color {
     if rec.hit {

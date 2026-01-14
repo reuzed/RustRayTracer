@@ -1,6 +1,6 @@
 use crate::hittable::{HitRecord, Hittable};
 use crate::ray::Ray;
-use crate::vec3::{self, Point3};
+use crate::linalg::vec3::{self, Point3};
 
 pub struct Sphere {
     center: Point3,

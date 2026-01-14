@@ -1,17 +1,14 @@
-use rust_ray_tracer::color;
 use rust_ray_tracer::constants;
 use rust_ray_tracer::hittable;
 use rust_ray_tracer::hittable_list;
 use rust_ray_tracer::ray;
-// use rust_ray_tracer::utils;
-// use rust_ray_tracer::vec2;
-use rust_ray_tracer::vec3;
-
-use color::Color;
+use rust_ray_tracer::linalg::vec3;
 use constants::INFINITY;
 use hittable::{HitRecord, Hittable};
 use hittable_list::HittableList;
 use ray::Ray;
+use rust_ray_tracer::shading::Color;
+use rust_ray_tracer::shading::write_color;
 use rust_ray_tracer::sphere::Sphere;
 use std::io;
 use vec3::{Point3, Vec3};
@@ -62,7 +59,7 @@ fn main() {
                 lower_left_corner + u * horizontal + v * vertical - origin,
             );
             let pixel_color = ray_color(&r, &world);
-            color::write_color(&mut io::stdout(), pixel_color);
+            write_color(&mut io::stdout(), pixel_color);
         }
     }
 }

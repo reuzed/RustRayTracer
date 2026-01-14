@@ -1,17 +1,17 @@
-use rust_ray_tracer::color;
 use rust_ray_tracer::ray;
 use rust_ray_tracer::raymarching::march;
-use rust_ray_tracer::sdf::rotate;
-use rust_ray_tracer::sdf::sd_box;
-use rust_ray_tracer::sdf::translate;
-use rust_ray_tracer::sdf::union;
+use rust_ray_tracer::raymarching::rotate;
+use rust_ray_tracer::raymarching::sd_box;
+use rust_ray_tracer::raymarching::translate;
+use rust_ray_tracer::raymarching::union;
+use rust_ray_tracer::shading::write_color;
 use rust_ray_tracer::utils;
 use rust_ray_tracer::utils::remap;
-use rust_ray_tracer::vec3;
+use rust_ray_tracer::linalg::vec3;
 
 use ray::Ray;
-use rust_ray_tracer::vec3::dot;
-use rust_ray_tracer::{color::Color, sdf::sd_sphere};
+use rust_ray_tracer::linalg::vec3::dot;
+use rust_ray_tracer::{shading::Color, raymarching::sd_sphere};
 use std::io;
 use utils::lerp;
 use vec3::Vec3;
@@ -72,7 +72,7 @@ fn main() {
                 }
             };
 
-            color::write_color(&mut io::stdout(), pixel_color);
+            write_color(&mut io::stdout(), pixel_color);
         }
     }
 }

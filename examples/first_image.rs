@@ -1,8 +1,8 @@
 // USAGE:
 // cargo run --example first_image > image.ppm
 
-use color::Color;
-use rust_ray_tracer::color;
+use shading::{Color, write_color};
+use rust_ray_tracer::shading;
 
 use std::io;
 
@@ -23,7 +23,7 @@ fn main() {
             let b = 0.25;
 
             let pixel_color = Color::new(r, g, b);
-            color::write_color(&mut io::stdout(), pixel_color);
+            write_color(&mut io::stdout(), pixel_color);
         }
     }
 }

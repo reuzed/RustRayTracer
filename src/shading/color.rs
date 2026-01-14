@@ -1,6 +1,6 @@
 use ::std::io::Write;
 
-use crate::vec3::Vec3;
+use crate::linalg::vec3::Vec3;
 
 // Type Alias
 pub type Color = Vec3;

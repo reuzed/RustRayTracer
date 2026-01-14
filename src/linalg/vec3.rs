@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter, Result};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub};
 
-use crate::vec2;
+use crate::linalg::vec2;
 
 use vec2::Vec2;
 

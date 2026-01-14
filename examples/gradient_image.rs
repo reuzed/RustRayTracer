@@ -1,12 +1,13 @@
 // USAGE:
 // cargo run --example gradient_image > image2.ppm
 
-use rust_ray_tracer::color;
+use rust_ray_tracer::shading;
 use rust_ray_tracer::ray;
+use rust_ray_tracer::shading::write_color;
 use rust_ray_tracer::utils;
-use rust_ray_tracer::vec3;
+use rust_ray_tracer::linalg::vec3;
 
-use color::Color;
+use shading::Color;
 use ray::Ray;
 use std::io;
 use utils::lerp;
@@ -50,7 +51,7 @@ fn main() {
                 lower_left_corner + u * horizontal + v * vertical - origin,
             );
             let pixel_color = ray_color(&r);
-            color::write_color(&mut io::stdout(), pixel_color);
+            write_color(&mut io::stdout(), pixel_color);
         }
     }
 }

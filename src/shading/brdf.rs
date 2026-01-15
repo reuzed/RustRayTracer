@@ -1,6 +1,8 @@
 use crate::linalg::vec3::{Vec3, dot};
 
 // Fresnel (shallow angle reflection) : https://en.wikipedia.org/wiki/Fresnel_equations
+// https://en.wikipedia.org/wiki/Schlick%27s_approximation
+
 // try these: https://en.wikipedia.org/wiki/List_of_common_shading_algorithms
 
 pub fn lambert(_outgoing: Vec3, normal: Vec3, to_light: Vec3) -> f64 {

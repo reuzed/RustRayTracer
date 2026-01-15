@@ -37,6 +37,7 @@ impl Camera {
         viewport_width: f64,
         aspect_ratio: f64,
     ) -> Camera {
+        // TODO cache orthonormal basis of camera
         let viewport_height = viewport_width / aspect_ratio;
         Camera {
             position: pos,
@@ -79,6 +80,12 @@ impl Camera {
 
     pub fn lower_left_corner(&self) -> Vec3 {
         self.position + self.to_screen_center() - self.horizontal() / 2.0 - self.vertical() / 2.0
+    }
+
+    pub fn get_ray(&self, u:f64, v: f64) -> Ray {
+        // u, v \in [0,1] describe where on viewport ray will be cast
+        let direction = self.lower_left_corner() + u * self.horizontal() + v * self.vertical() - self.position;
+        Ray::new(self.position, direction)
     }
 }
 
@@ -128,17 +135,11 @@ impl Renderer {
     }
 
     pub fn rays_iter(&self) -> impl Iterator<Item = Ray> {
-        let horizontal = self.camera.horizontal();
-        let vertical = self.camera.vertical();
-        let lower_left_corner = self.camera.lower_left_corner();
-        let origin = self.camera.position;
         (0..self.image_height).rev().flat_map(move |j| {
             (0..self.image_width).rev().map(move |i| {
                 let u = i as f64 / (self.image_width - 1) as f64;
                 let v = j as f64 / (self.image_height - 1) as f64;
-                let direction =
-                    lower_left_corner + u * horizontal + v * vertical - self.camera.position;
-                Ray::new(origin, direction)
+                self.camera.get_ray(u, v)
             })
         })
     }

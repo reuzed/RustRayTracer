@@ -1,7 +1,7 @@
 use rand::Rng;
 
 pub fn random_double() -> f64 {
-    rand::thread_rng().gen()
+    rand::rng().random()
 }
 
 pub fn random_range(min: f64, max: f64) -> f64 {

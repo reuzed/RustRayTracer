@@ -51,7 +51,7 @@ fn main() {
                 lower_left_corner + u * horizontal + v * vertical - origin,
             );
             let pixel_color = ray_color(&r);
-            write_color(&mut io::stdout(), pixel_color);
+            write_color(&mut io::stdout(), pixel_color, 1);
         }
     }
 }

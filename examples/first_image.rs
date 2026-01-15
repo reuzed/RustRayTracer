@@ -23,7 +23,7 @@ fn main() {
             let b = 0.25;
 
             let pixel_color = Color::new(r, g, b);
-            write_color(&mut io::stdout(), pixel_color);
+            write_color(&mut io::stdout(), pixel_color, 1);
         }
     }
 }

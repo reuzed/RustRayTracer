@@ -72,7 +72,7 @@ fn main() {
                 }
             };
 
-            write_color(&mut io::stdout(), pixel_color);
+            write_color(&mut io::stdout(), pixel_color, 1);
         }
     }
 }

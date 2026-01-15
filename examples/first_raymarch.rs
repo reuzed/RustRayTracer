@@ -58,7 +58,7 @@ fn main() {
             } else {
                 Color::new(0.0, 0.0, 0.0)
             };
-            write_color(&mut io::stdout(), pixel_color);
+            write_color(&mut io::stdout(), pixel_color, 1);
         }
     }
 }

@@ -150,7 +150,7 @@ impl Renderer {
 
         for ray in self.rays_iter() {
             let pixel_color: Color = ray_to_col(ray);
-            write_color(&mut io::stdout(), pixel_color);
+            write_color(&mut io::stdout(), pixel_color, 1);
         }
     }
 }

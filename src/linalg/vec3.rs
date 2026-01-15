@@ -2,6 +2,7 @@ use std::fmt::{Display, Formatter, Result};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub};
 
 use crate::linalg::vec2;
+use crate::random::random_range;
 
 use vec2::Vec2;
 
@@ -79,6 +80,15 @@ impl Vec3 {
     pub fn zero() -> Vec3 {
         Vec3::new(0.0, 0.0, 0.0)
     }
+
+    pub fn random_range(min: f64, max:f64) -> Vec3 {
+        Vec3::new(
+            random_range(min, max),
+            random_range(min, max),
+            random_range(min, max),
+        )
+    }
+
 }
 
 // Type alias
@@ -200,6 +210,19 @@ pub fn cross(u: Vec3, v: Vec3) -> Vec3 {
 // unit vector
 pub fn unit_vector(v: Vec3) -> Vec3 {
     v / v.length()
+}
+
+pub fn random_in_unit_sphere() -> Vec3 {
+    loop {
+        let p = Vec3::random_range(-1.0, 1.0);
+        if p.length_squared() <= 1.0 {
+            return p;
+        }
+    }
+}
+
+pub fn random_on_unit_sphere() -> Vec3 {
+    unit_vector(random_in_unit_sphere())
 }
 
 // project one vector onto another

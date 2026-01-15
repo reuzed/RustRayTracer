@@ -9,7 +9,7 @@ pub mod ray;
 pub mod shading;
 pub mod sphere;
 pub mod utils;
-
+pub mod random;
 
 // raymarching
 pub mod raymarching;

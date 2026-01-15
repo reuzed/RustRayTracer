@@ -55,6 +55,15 @@ impl Vec3 {
         Vec3::new(self.x().abs(), self.y().abs(), self.z().abs())
     }
 
+    pub fn round(&self) -> Vec3 {
+        Vec3::new(self.x().round(), self.y().round(), self.z().round())
+    }
+
+    pub fn round_xz(&self) -> Vec3 {
+        // for domain repetition inn xz, return the rounded vector with 0.0 in y 
+        Vec3::new(self.x().round(), 0.0, self.z().round())
+    }
+
     pub fn max_element(&self) -> f64 {
         self.x().max(self.y().max(self.z()))
     }

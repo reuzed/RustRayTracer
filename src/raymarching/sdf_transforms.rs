@@ -39,5 +39,12 @@ pub fn smooth_union(sdf1: impl Sdf, sdf2: impl Sdf, k: f64) -> impl Sdf {
     }
 }
 
+pub fn repetition(sdf: impl Sdf, s: f64) -> impl Sdf {
+    move |point: Vec3| {
+        let p = point - s * (point / s).round_xz();
+        sdf(p)
+    }
+}
+
 
 

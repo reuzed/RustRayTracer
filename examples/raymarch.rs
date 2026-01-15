@@ -1,5 +1,5 @@
 use rust_ray_tracer::{
-    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3, dot, unit_vector}, ray::Ray, raymarching::{march, rotate, sd_box, sd_plane, sd_sphere, smooth_union, translate, union}, shading::{Color, shade}, sphere::Sphere
+    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3, dot, unit_vector}, ray::Ray, raymarching::{march, repetition, rotate, sd_box, sd_plane, sd_sphere, smooth_union, translate, union}, shading::{Color, shade}, sphere::Sphere
 };
 
 fn main() {
@@ -31,7 +31,7 @@ fn main() {
         let sdf2 = translate(sdf2, Vec3::new(1.0, 0.0, -1.5));
         let sdf2 = rotate(sdf2, 5.0, -20.0, 50.0);
         let sdf_floor = sd_plane(Vec3::new(0.0, 1.0, 0.0), 0.0);
-        smooth_union(sdf_floor, union(sdf1, sdf2), 0.2)
+        smooth_union(sdf_floor, union(repetition(sdf1, 5.0), sdf2), 0.2)
     };
 
     let light = Point3::new(1.0, 4.0, 2.0);

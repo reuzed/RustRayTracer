@@ -1,11 +1,7 @@
+use std::io;
+
 use rust_ray_tracer::{
-    camera::{Camera, Renderer},
-    constants::INFINITY,
-    hittable::{HitRecord, Hittable},
-    hittable_list::HittableList,
-    shading::shade,
-    sphere::Sphere,
-    linalg::vec3::{Point3, Vec3},
+    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3}, shading::{Color, shade, write_color}, sphere::Sphere
 };
 
 fn main() {
@@ -26,15 +22,27 @@ fn main() {
         16.0 / 9.0,
     );
 
-    let renderer = Renderer::new(512, 16.0 / 9.0, camera);
+    let renderer = Renderer::new(512, 16.0 / 9.0, camera.clone());
 
     // Render
 
-    renderer.render_to_ppm(|ray| {
-        let mut rec = HitRecord::new();
+    const SAMPLES_PER_PIXEL: i32 = 100;
 
-        world.hit(&ray, 0.0, INFINITY, &mut rec);
+    renderer.ppm_header();
 
-        shade(rec)
-    })
+    for j in (0..renderer.image_height).rev(){
+        for i in (0..renderer.image_width).rev(){
+            let mut pixel_color = Color::new(0.0, 0.0, 0.0);
+            for _ in 0..SAMPLES_PER_PIXEL {
+                let u = i as f64 / (renderer.image_width - 1) as f64;
+                let v = j as f64 / (renderer.image_height - 1) as f64;
+                let mut rec = HitRecord::new();
+
+                world.hit(&camera.get_ray(u, v), 0.0, INFINITY, &mut rec);
+                
+                pixel_color += shade(rec)
+            }
+            write_color(&mut io::stdout(), pixel_color);
+        }
+    }
 }

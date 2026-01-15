@@ -6,6 +6,7 @@ use crate::{
     linalg::vec3::{Point3, Vec3, cross, orthogonalise, unit_vector},
 };
 
+#[derive(Clone)]
 pub struct Camera {
     position: Point3,
     target: Point3,
@@ -25,8 +26,8 @@ pub struct CameraBuilder {
 pub struct Renderer {
     camera: Camera,
     pub aspect_ratio: f64,
-    image_width: u32,
-    image_height: u32,
+    pub image_width: u32,
+    pub image_height: u32,
 }
 
 impl Camera {

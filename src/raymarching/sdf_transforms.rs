@@ -27,3 +27,17 @@ pub fn rotate(sdf: impl Sdf, theta_x: f64, theta_y: f64, theta_z: f64) -> impl S
 pub fn union(sdf1: impl Sdf, sdf2: impl Sdf) -> impl Sdf {
     move |point| sdf1(point).min(sdf2(point))
 }
+
+pub fn smooth_union(sdf1: impl Sdf, sdf2: impl Sdf, k: f64) -> impl Sdf {
+    // https://iquilezles.org/articles/smin/
+    let k = k * 4.0;
+    move |point| {
+        let d1 = sdf1(point);
+        let d2 = sdf2(point);
+        let h = (k - (d1-d2).abs()).max(0.0) / k;
+        d1.min(d2) - h * h * k * 1.0/4.0
+    }
+}
+
+
+

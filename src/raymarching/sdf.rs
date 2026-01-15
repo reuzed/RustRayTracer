@@ -1,14 +1,12 @@
 // Module for signed disance fields, representing various shapes
 
 use crate::{
-    linalg::mat3::rot_mat,
+    linalg::{mat3::rot_mat, vec2::Vec2, vec3::{Point3, Vec3, dot, unit_vector}},
     utils::gradians_to_radians,
-    linalg::vec2::Vec2,
-    linalg::vec3::{Point3, Vec3, unit_vector},
 };
 
-pub trait Sdf: Fn(Vec3) -> f64 + 'static {}
-impl<F: Fn(Vec3) -> f64 + 'static> Sdf for F {}
+pub trait Sdf: Fn(Vec3) -> f64 + Clone + 'static {}
+impl<F: Fn(Vec3) -> f64 + Clone + 'static> Sdf for F {}
 
 pub fn sd_sphere(radius: f64) -> impl Sdf {
     move |point| point.length() - radius
@@ -26,6 +24,13 @@ pub fn sd_torus(t: Vec2) -> impl Sdf {
     move |point: Vec3| {
         let q = Vec2::new(point.xz().length() - t.x(), point.y());
         q.length() - t.y()
+    }
+}
+
+pub fn sd_plane(n: Vec3, h: f64) -> impl Sdf {
+    let n = unit_vector(n);
+    move |point: Vec3| {
+        dot(point, n) + h
     }
 }
 

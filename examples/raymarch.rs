@@ -1,5 +1,5 @@
 use rust_ray_tracer::{
-    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3}, raymarching::{march, rotate, sd_box, sd_sphere, translate, union}, shading::{Color, shade}, sphere::Sphere
+    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3, dot, unit_vector}, ray::Ray, raymarching::{march, rotate, sd_box, sd_plane, sd_sphere, smooth_union, translate, union}, shading::{Color, shade}, sphere::Sphere
 };
 
 fn main() {
@@ -24,18 +24,33 @@ fn main() {
 
     // Render
 
-    renderer.render_to_ppm(|ray| {
+    let sdf = {
         let sdf1 = sd_sphere(0.5);
         let sdf1 = translate(sdf1, Vec3::new(0.0, 0.0, -1.0));
         let sdf2 = sd_box(Vec3::new(0.3, 0.3, 0.3));
         let sdf2 = translate(sdf2, Vec3::new(1.0, 0.0, -1.5));
         let sdf2 = rotate(sdf2, 5.0, -20.0, 50.0);
-        let sdf = union(sdf1, sdf2);
+        let sdf_floor = sd_plane(Vec3::new(0.0, 1.0, 0.0), 0.0);
+        smooth_union(sdf_floor, union(sdf1, sdf2), 0.2)
+    };
 
-        let res = march(ray, sdf);
+    let light = Point3::new(1.0, 4.0, 2.0);
+
+    renderer.render_to_ppm(|ray| {
+        let res = march(ray, sdf.clone());
 
         if res.hit {
-            Color::new(1.0,0.3,0.5)
+            let hr = res.hr.unwrap();
+
+            let to_light_vec = unit_vector(light - hr.pos);
+            let to_light = Ray::new(hr.pos + 0.1 * to_light_vec, to_light_vec);
+            let shadow_res = march(to_light, sdf.clone());
+            if shadow_res.hit {
+                Color::new(0.1,0.1,0.1)
+            }
+            else {
+                Color::new(1.0,0.3,0.5) * dot(unit_vector(light - hr.pos), hr.normal)
+            }
         }
         else {
             Color::new(0.2,0.3,0.5)

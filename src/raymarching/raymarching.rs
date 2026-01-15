@@ -24,11 +24,18 @@ pub fn march_simple(ray: Ray, sdf: impl Sdf) -> bool {
     false
 }
 
+pub struct HitResult {
+    pub distance: f64,
+    pub pos: Vec3,
+    pub normal: Vec3,
+}
+
 pub struct MarchResult {
     pub hit: bool,
     pub steps: usize,
-    pub normal: Option<Vec3>,
+    pub hr: Option<HitResult>,
 }
+
 pub fn march(ray: Ray, sdf: impl Sdf) -> MarchResult {
     // Take a ray and sdf, march up to some tolerance or max number of steps
     let mut pos = ray.origin();
@@ -40,7 +47,11 @@ pub fn march(ray: Ray, sdf: impl Sdf) -> MarchResult {
             return MarchResult {
                 hit: true,
                 steps: i,
-                normal: Some(normal(sdf, pos)),
+                hr: Some(HitResult{
+                    distance: d,
+                    pos: pos,
+                    normal: normal(sdf, pos),
+                })
             };
         }
         pos += unit_dir * d;
@@ -53,6 +64,6 @@ pub fn march(ray: Ray, sdf: impl Sdf) -> MarchResult {
     MarchResult {
         hit: false,
         steps: steps_taken,
-        normal: None,
+        hr: None,
     }
 }

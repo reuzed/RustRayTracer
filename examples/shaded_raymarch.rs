@@ -61,7 +61,7 @@ fn main() {
 
             let pixel_color: Color = {
                 if march_result.hit {
-                    let t = dot(march_result.normal.unwrap(), Vec3::new(0.0, 0.0, 1.0));
+                    let t = dot(march_result.hr.unwrap().normal, Vec3::new(0.0, 0.0, 1.0));
                     lerp(Color::new(0.0, 0.0, 0.0), Color::new(1.0, 0.3, 0.1), t)
                 } else {
                     lerp(

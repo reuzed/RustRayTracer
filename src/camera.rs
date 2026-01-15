@@ -54,14 +54,14 @@ impl Camera {
 
     pub fn horizontal(&self) -> Vec3 {
         // Cross between vector to target and vertical
-        eprint!(
-            "pos: {}, target: {} \nvert: {} \nto_screen: {} \nhoriz: {}",
-            self.position,
-            self.target,
-            self.vertical(),
-            self.to_screen_center(),
-            self.viewport_width * unit_vector(cross(self.to_screen_center(), self.vertical()))
-        );
+        // eprint!(
+        //     "pos: {}, target: {} \nvert: {} \nto_screen: {} \nhoriz: {}",
+        //     self.position,
+        //     self.target,
+        //     self.vertical(),
+        //     self.to_screen_center(),
+        //     self.viewport_width * unit_vector(cross(self.to_screen_center(), self.vertical()))
+        // );
         self.viewport_width * unit_vector(cross(self.vertical(), self.to_screen_center()))
     }
 

@@ -1,7 +1,7 @@
 use std::io;
 
 use rust_ray_tracer::{
-    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3, dot, unit_vector}, random::random_double, ray::Ray, raymarching::{march, repetition, rotate, sd_box, sd_plane, sd_sphere, smooth_union, translate, union}, shading::{Color, shade, write_color}, sphere::Sphere
+    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3, dot, unit_vector}, random::random_double, ray::Ray, raymarching::{march, repetition, rotate, sd_box, sd_plane, sd_sphere, smooth_union, softshadow, translate, union}, shading::{Color, shade, write_color}, sphere::Sphere
 };
 
 fn main() {
@@ -65,16 +65,15 @@ fn main() {
                     let hr = res.hr.unwrap();
 
                     let to_light_vec = unit_vector(light - hr.pos);
-                    let to_light = Ray::new(hr.pos + 0.0001 * to_light_vec, to_light_vec);
-                    let shadow_res = march(to_light, sdf.clone());
-                    if shadow_res.hit {
-                        pixel_color += 0.2 * Color::new(1.0,0.3,0.5) * dot(unit_vector(light - hr.pos), hr.normal)
-                    }
-                    else {
-                        pixel_color += Color::new(1.0,0.3,0.5) * dot(unit_vector(light - hr.pos), hr.normal)
-                    }
+                    let to_light_ray = Ray::new(hr.pos + 0.0001 * to_light_vec, to_light_vec);
+                    
+                    let soft_light = softshadow(to_light_ray, 0.1, 300.0, sdf.clone(), 2.0);
+
+                    let normal_light_proportion = dot(hr.normal, to_light_vec);
+                    pixel_color += soft_light * normal_light_proportion * Color::new(1.0,0.3,0.5)
                 }
                 else {
+                    // Sky colour
                     pixel_color += Color::new(0.2,0.3,0.5)
                 }
             }

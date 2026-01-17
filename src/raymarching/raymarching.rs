@@ -1,23 +1,23 @@
 // Functions to march rays and see what happens
 
-use std::f64::consts::PI;
-
 use crate::{
     linalg::vec3::{Vec3, unit_vector},
     ray::Ray,
     raymarching::{Sdf, normal},
 };
 
+use super::SdfRef;
+
 const CLOSE_TOLERANCE: f64 = 0.0001;
 const MAX_STEPS: usize = 2000;
 const MAX_DISTANCE: f64 = 200.0;
 
-pub fn march_simple(ray: Ray, sdf: impl Sdf) -> bool {
+pub fn march_simple(ray: Ray, sdf: SdfRef) -> bool {
     // Take a ray and sdf, march up to some tolerance or max number of steps
     let mut pos = ray.origin();
     let unit_dir = unit_vector(ray.direction());
     for _ in 0..MAX_STEPS {
-        let d = sdf(pos);
+        let d = sdf.distance(pos);
         if d < CLOSE_TOLERANCE {
             return true;
         }
@@ -42,7 +42,7 @@ pub struct MarchResult {
 const SHADOW_STEPS: i32 = 256;
 const SHADOW_EPSILON: f64 = 0.001;
 
-pub fn softshadow(ray: Ray, mint: f64, maxt: f64, sdf: impl Sdf, penumbra_sharpness: f64) -> f64 {
+pub fn softshadow(ray: Ray, mint: f64, maxt: f64, sdf: SdfRef, penumbra_sharpness: f64) -> f64 {
     let mut light: f64 = 1.0;
     let mut t = mint;
     for _ in 0..SHADOW_STEPS {
@@ -50,7 +50,7 @@ pub fn softshadow(ray: Ray, mint: f64, maxt: f64, sdf: impl Sdf, penumbra_sharpn
             break;
         }
         let p = ray.at(t);
-        let h = sdf(p);
+        let h = sdf.distance(p);
         if h < SHADOW_EPSILON {
             return 0.0;
         }
@@ -60,14 +60,14 @@ pub fn softshadow(ray: Ray, mint: f64, maxt: f64, sdf: impl Sdf, penumbra_sharpn
     light
 }
 
-pub fn march(ray: Ray, sdf: impl Sdf) -> MarchResult {
+pub fn march(ray: Ray, sdf: SdfRef) -> MarchResult {
     // Take a ray and sdf, march up to some tolerance or max number of steps
     let mut pos = ray.origin();
     let mut travelled = 0.0;
     let unit_dir = unit_vector(ray.direction());
     let mut steps_taken = 0;
     for i in 0..MAX_STEPS {
-        let d = sdf(pos);
+        let d = sdf.distance(pos);
         if d < CLOSE_TOLERANCE && travelled > 3.0 * CLOSE_TOLERANCE {
             return MarchResult {
                 hit: true,

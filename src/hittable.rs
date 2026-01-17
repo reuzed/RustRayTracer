@@ -1,5 +1,5 @@
-use crate::ray::Ray;
 use crate::linalg::vec3::{self, Point3, Vec3};
+use crate::ray::Ray;
 
 #[derive(Clone, Default)]
 pub struct HitRecord {

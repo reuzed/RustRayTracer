@@ -3,9 +3,9 @@
 use std::f64::consts::PI;
 
 use crate::{
+    linalg::vec3::{Vec3, unit_vector},
     ray::Ray,
     raymarching::{Sdf, normal},
-    linalg::vec3::{Vec3, unit_vector},
 };
 
 const CLOSE_TOLERANCE: f64 = 0.0001;
@@ -72,12 +72,12 @@ pub fn march(ray: Ray, sdf: impl Sdf) -> MarchResult {
             return MarchResult {
                 hit: true,
                 steps: i,
-                hr: Some(HitResult{
+                hr: Some(HitResult {
                     travelled: travelled,
                     distance: d,
                     pos: pos,
                     normal: normal(sdf, pos),
-                })
+                }),
             };
         }
         travelled += d;

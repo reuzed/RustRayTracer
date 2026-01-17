@@ -1,7 +1,14 @@
 use std::io;
 
 use rust_ray_tracer::{
-    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3}, random::random_double, shading::{Color, shade, write_color}, sphere::Sphere
+    camera::{Camera, Renderer},
+    constants::INFINITY,
+    hittable::{HitRecord, Hittable},
+    hittable_list::HittableList,
+    linalg::vec3::{Point3, Vec3},
+    random::random_double,
+    shading::{Color, shade, write_color},
+    sphere::Sphere,
 };
 
 fn main() {
@@ -30,8 +37,8 @@ fn main() {
 
     print!("{}", renderer.ppm_header());
 
-    for j in (0..renderer.image_height).rev(){
-        for i in (0..renderer.image_width).rev(){
+    for j in (0..renderer.image_height).rev() {
+        for i in (0..renderer.image_width).rev() {
             let mut pixel_color = Color::new(0.0, 0.0, 0.0);
             for _ in 0..SAMPLES_PER_PIXEL {
                 let u = (i as f64 + random_double()) / (renderer.image_width - 1) as f64;
@@ -39,7 +46,7 @@ fn main() {
                 let mut rec = HitRecord::new();
 
                 world.hit(&camera.get_ray(u, v), 0.0, INFINITY, &mut rec);
-                
+
                 pixel_color += shade(rec)
             }
             write_color(&mut io::stdout(), pixel_color, SAMPLES_PER_PIXEL);

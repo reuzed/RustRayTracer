@@ -61,7 +61,7 @@ impl Vec3 {
     }
 
     pub fn round_xz(&self) -> Vec3 {
-        // for domain repetition inn xz, return the rounded vector with 0.0 in y 
+        // for domain repetition inn xz, return the rounded vector with 0.0 in y
         Vec3::new(self.x().round(), 0.0, self.z().round())
     }
 
@@ -81,14 +81,13 @@ impl Vec3 {
         Vec3::new(0.0, 0.0, 0.0)
     }
 
-    pub fn random_range(min: f64, max:f64) -> Vec3 {
+    pub fn random_range(min: f64, max: f64) -> Vec3 {
         Vec3::new(
             random_range(min, max),
             random_range(min, max),
             random_range(min, max),
         )
     }
-
 }
 
 // Type alias

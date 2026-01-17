@@ -1,7 +1,6 @@
-use crate::{linalg::mat3::rot_mat, utils::gradians_to_radians, linalg::vec3::Vec3};
+use crate::{linalg::mat3::rot_mat, linalg::vec3::Vec3, utils::gradians_to_radians};
 
 use super::Sdf;
-
 
 pub fn translate(sdf: impl Sdf, offset: Vec3) -> impl Sdf {
     move |point| sdf(point - offset)
@@ -34,8 +33,8 @@ pub fn smooth_union(sdf1: impl Sdf, sdf2: impl Sdf, k: f64) -> impl Sdf {
     move |point| {
         let d1 = sdf1(point);
         let d2 = sdf2(point);
-        let h = (k - (d1-d2).abs()).max(0.0) / k;
-        d1.min(d2) - h * h * k * 1.0/4.0
+        let h = (k - (d1 - d2).abs()).max(0.0) / k;
+        d1.min(d2) - h * h * k * 1.0 / 4.0
     }
 }
 
@@ -45,6 +44,3 @@ pub fn repetition(sdf: impl Sdf, s: f64) -> impl Sdf {
         sdf(p)
     }
 }
-
-
-

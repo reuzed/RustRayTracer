@@ -18,5 +18,3 @@ pub fn phong(outgoing: Vec3, normal: Vec3, to_light: Vec3) -> f64 {
     //https://en.wikipedia.org/wiki/Phong_reflection_model
     0.1 + 0.4 * lambert(outgoing, normal, to_light) + 0.5 * glossy(outgoing, normal, to_light)
 }
-
-

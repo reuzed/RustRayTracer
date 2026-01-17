@@ -1,9 +1,9 @@
 use std::io;
 
 use crate::{
-    shading::{Color, write_color},
-    ray::Ray,
     linalg::vec3::{Point3, Vec3, cross, orthogonalise, unit_vector},
+    ray::Ray,
+    shading::{Color, write_color},
 };
 
 #[derive(Clone)]
@@ -83,9 +83,10 @@ impl Camera {
         self.position + self.to_screen_center() - self.horizontal() / 2.0 - self.vertical() / 2.0
     }
 
-    pub fn get_ray(&self, u:f64, v: f64) -> Ray {
+    pub fn get_ray(&self, u: f64, v: f64) -> Ray {
         // u, v \in [0,1] describe where on viewport ray will be cast
-        let direction = self.lower_left_corner() + u * self.horizontal() + v * self.vertical() - self.position;
+        let direction =
+            self.lower_left_corner() + u * self.horizontal() + v * self.vertical() - self.position;
         Ray::new(self.position, direction)
     }
 }

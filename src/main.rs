@@ -8,18 +8,18 @@ fn ray_color(r: &Ray, world: &dyn Hittable, depth: i32) -> Color {
     let mut rec = HitRecord::new();
 
     if depth <= 0 {
-        return Vec3::new(0.0, 0.0, 0.0);
+        return Color::new(0.0, 0.0, 0.0);
     }
 
     // direction = rec.normal + vec3::random_in_unit_sphere();
-    if world.hit(&r, 0.0, INFINITY, &mut rec) {
+    if world.hit(&r, 0.001, INFINITY, &mut rec) {
         let direction = rec.normal + vec3::random_in_unit_sphere(); 
         return 0.5 * ray_color(&Ray::new(rec.p, direction), world, depth-1);      // bounce
     }
 
     // return sky col
     let up = Vec3::new(0.0,1.0,0.0);
-    return dot(unit_vector(r.direction()), up).max(0.0) * Vec3::new(1.0,1.0,1.0)
+    return dot(unit_vector(r.direction()), up).max(0.0) * Color::new(5.0,5.0,5.0)
 }
 
 fn main() {
@@ -44,11 +44,11 @@ fn main() {
 
     // Render
 
-    const SAMPLES_PER_PIXEL: i32 = 100;
-    const MAX_DEPTH: i32 = 50;
+    const SAMPLES_PER_PIXEL: i32 = 10;
+    const MAX_DEPTH: i32 = 10;
     print!("{}", ppm_header(renderer.image_width, renderer.image_height));
 
-    for j in (0..renderer.image_height).rev() {
+    for j in (0..renderer.image_height).rev() { eprintln!("{j} out of {}", renderer.image_height);
         for i in (0..renderer.image_width).rev() {
             let mut pixel_color = Color::new(0.0, 0.0, 0.0);
             for _ in 0..SAMPLES_PER_PIXEL {

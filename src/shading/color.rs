@@ -23,9 +23,10 @@ pub fn write_color(out: &mut impl Write, pixel_color: Color, samples_per_pixel: 
     let mut b = pixel_color.z() as f64;
 
     let scale = 1.0 / samples_per_pixel as f64;
-    r *= scale;
-    g *= scale;
-    b *= scale;
+
+    r = f64::sqrt(scale * r);
+    g = f64::sqrt(scale * g);
+    b = f64::sqrt(scale * b);
 
     let r = (clamp(r, 0.0, 0.999) * 256.0) as i32;
     let g = (clamp(g, 0.0, 0.999) * 256.0) as i32;

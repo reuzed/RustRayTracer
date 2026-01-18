@@ -1,26 +1,29 @@
 use std::io;
 
-use crate::{camera::{Camera, Renderer}, linalg::vec3::{Point3, dot, unit_vector}, random::random_double, ray::Ray, raymarching::{Sdf, SdfRef, march, softshadow}, shading::{Color, write_color}};
+use crate::{camera::{Camera, Renderer}, linalg::vec3::{Point3, dot, unit_vector}, random::random_double, ray::Ray, raymarching::{Sdf, SdfRef, march, softshadow}, shading::{Color, color_to_string, write_color}};
 
-struct SdfRenderer {
+pub struct SdfRenderer {
     sdf: SdfRef,
     camera: Camera,
     renderer: Renderer,
 }
 
 impl SdfRenderer {
-    pub fn new() -> SdfRenderer {
-        panic!();
+    pub fn new(sdf: SdfRef, camera: Camera, renderer: Renderer) -> SdfRenderer {
+        SdfRenderer { sdf: sdf, camera: camera, renderer: renderer }
     }
 
-    pub fn render(&self) -> Vec<Vec<Color>> {
-        panic!();
-    }
+    // pub fn render(&self) -> Vec<Vec<Color>> {
+    //     panic!();
+    // }
 
     pub fn monte_carlo_render(&self, samples_per_pixel: i32) -> Vec<Vec<Color>> {
+        let mut frame = Vec::new();
+
         let light = Point3::new(1.0, 4.0, 2.0);
 
         for j in (0..self.renderer.image_height).rev() {
+            let mut row: Vec<Color> = Vec::new();
             for i in (0..self.renderer.image_width).rev() {
                 let mut pixel_color = Color::new(0.0, 0.0, 0.0);
                 for _ in 0..samples_per_pixel {
@@ -47,13 +50,20 @@ impl SdfRenderer {
                         pixel_color += Color::new(0.2, 0.3, 0.5)
                     }
                 }
-                write_color(&mut io::stdout(), pixel_color, samples_per_pixel);
+                row.push(pixel_color / (samples_per_pixel as f64));
             }
+            frame.push(row);
         }
-        panic!();
+        frame
     }
 
-    pub fn output_ppm(&self) {
+    pub fn output_ppm(&self, frame: Vec<Vec<Color>>) {
         print!("{}", self.renderer.ppm_header());
+
+        for row in frame {
+            for pixel_color in row {
+                println!("{}", color_to_string(pixel_color))
+            }
+        }
     }
 }

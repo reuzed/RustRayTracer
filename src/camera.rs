@@ -23,13 +23,6 @@ pub struct CameraBuilder {
     focal_length: f64,
 }
 
-pub struct Renderer {
-    camera: Camera,
-    pub aspect_ratio: f64,
-    pub image_width: u32,
-    pub image_height: u32,
-}
-
 impl Camera {
     pub fn new(
         pos: Point3,
@@ -119,6 +112,13 @@ impl CameraBuilder {
             self.aspect_ratio,
         )
     }
+}
+
+pub struct Renderer {
+    camera: Camera,
+    pub aspect_ratio: f64,
+    pub image_width: u32,
+    pub image_height: u32,
 }
 
 impl Renderer {

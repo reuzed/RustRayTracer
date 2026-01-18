@@ -13,6 +13,7 @@ pub struct Camera {
     focal_length: f64,
 }
 
+#[derive(Copy, Clone)]
 pub struct CameraBuilder {
     position: Point3,
     target: Point3,
@@ -93,12 +94,14 @@ impl CameraBuilder {
         }
     }
 
-    pub fn position(mut self, pos: Vec3) {
-        self.position = pos
+    pub fn position(&mut self, pos: Vec3) -> &mut Self {
+        self.position = pos;
+        self
     }
 
-    pub fn target(mut self, target: Vec3) {
-        self.target = target
+    pub fn target(&mut self, target: Vec3) -> &mut Self {
+        self.target = target;
+        self
     }
 
     pub fn build(&self) -> Camera {

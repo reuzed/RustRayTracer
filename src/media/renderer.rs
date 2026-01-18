@@ -15,9 +15,9 @@ impl SdfRenderer {
         SdfRenderer { sdf: sdf, camera: camera, screen: screen }
     }
 
-    // pub fn render(&self) -> Vec<Vec<Color>> {
-    //     panic!();
-    // }
+    pub fn render(&self) -> Vec<Vec<Color>> {
+        self.monte_carlo_render(1)
+    }
 
     pub fn monte_carlo_render(&self, samples_per_pixel: i32) -> Vec<Vec<Color>> {
         let mut frame = Vec::new();
@@ -29,8 +29,18 @@ impl SdfRenderer {
             for i in (0..self.screen.image_width).rev() {
                 let mut pixel_color = Color::new(0.0, 0.0, 0.0);
                 for _ in 0..samples_per_pixel {
-                    let u = self.screen.u(i as f64 + random_double());
-                    let v = self.screen.v(j as f64 + random_double());
+                    // Don't randomise rays if only one sample
+                    let (u,v ) = if samples_per_pixel == 1 {
+                        let u = self.screen.u(i as f64);
+                        let v = self.screen.v(j as f64);
+                        (u,v)
+                    }
+                    else {
+                        let u = self.screen.u(i as f64 + random_double());
+                        let v = self.screen.v(j as f64 + random_double());
+                        (u,v)
+                    };
+                    
 
                     let ray = self.camera.get_ray(u, v);
 

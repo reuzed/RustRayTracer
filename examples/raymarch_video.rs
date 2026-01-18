@@ -2,26 +2,14 @@
 use std::io;
 
 use rust_ray_tracer::{
-    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3, dot, unit_vector}, media::{image::save_frame, ppm::ppm_header, renderer::SdfRenderer, screen::Screen}, random::random_double, ray::Ray, raymarching::{
+    camera::{Camera, CameraBuilder, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3, dot, unit_vector}, media::{image::save_frame, ppm::ppm_header, renderer::SdfRenderer, screen::Screen}, random::random_double, ray::Ray, raymarching::{
         march, repetition, rotate, sd_box, sd_plane, sd_sphere, smooth_union, softshadow,
         translate, union,
     }, shading::{Color, shade, write_color}, sphere::Sphere
 };
 
 fn main() {
-    // Camera
-
-    let camera = Camera::new(
-        Vec3::new(2.0, 2.0, -4.0),
-        Vec3::new(0.0, 0.0, -1.0),
-        1.0,
-        2.0,
-        16.0 / 9.0,
-    );
-
-    let screen = Screen::new(512, 16.0 / 9.0);
-
-    // Render
+    // World
 
     // let sdf = {
     //     let sdf1 = sd_sphere(0.5);
@@ -40,17 +28,30 @@ fn main() {
         union(sdf_floor, sdf_box)
     };
 
-    let light = Point3::new(1.0, 4.0, 2.0);
 
-    const SAMPLES_PER_PIXEL: i32 = 3;
+    // Camera
 
-    // print!("{}", ppm_header(screen.image_width, screen.image_height));
+    let mut camera_builder = CameraBuilder::new();
 
-    let sdf_renderer = SdfRenderer::new(sdf, camera, screen);
+    camera_builder.target(Vec3::new(0.0, 0.0, -1.0));
+    camera_builder.position(Vec3::new(2.0, 2.0, -4.0));
 
-    let frame = sdf_renderer.monte_carlo_render(SAMPLES_PER_PIXEL);
+    let screen = Screen::new(512, 16.0 / 9.0);
 
-    save_frame(frame, "output.png");
-    // sdf_renderer.output_ppm(frame);
+
+    const SAMPLES_PER_PIXEL: i32 = 1;
+
+    for i in 0..30 {
+        camera_builder.position(
+            Vec3::new(5.0 * f64::cos(0.1 * i as f64), 2.0, 5.0 * f64::sin(0.1 * i as f64))
+        );  
+        let camera = camera_builder.build();
+
+        let sdf_renderer = SdfRenderer::new(sdf.clone(), camera, screen.clone());
+    
+        let frame = sdf_renderer.monte_carlo_render(SAMPLES_PER_PIXEL);
+    
+        save_frame(frame, &format!("tmp/image_{:03}.png", i));
+    }
 
 }

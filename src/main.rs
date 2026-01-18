@@ -1,14 +1,7 @@
 use std::io;
 
 use rust_ray_tracer::{
-    camera::{Camera, Renderer},
-    constants::INFINITY,
-    hittable::{HitRecord, Hittable},
-    hittable_list::HittableList,
-    linalg::vec3::{Point3, Vec3},
-    random::random_double,
-    shading::{Color, shade, write_color},
-    sphere::Sphere,
+    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3}, media::ppm::ppm_header, random::random_double, shading::{Color, shade, write_color}, sphere::Sphere
 };
 
 fn main() {
@@ -35,7 +28,7 @@ fn main() {
 
     const SAMPLES_PER_PIXEL: i32 = 100;
 
-    print!("{}", renderer.ppm_header());
+    print!("{}", ppm_header(renderer.image_width, renderer.image_height));
 
     for j in (0..renderer.image_height).rev() {
         for i in (0..renderer.image_width).rev() {

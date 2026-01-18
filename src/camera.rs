@@ -1,9 +1,7 @@
 use std::io;
 
 use crate::{
-    linalg::vec3::{Point3, Vec3, cross, orthogonalise, unit_vector},
-    ray::Ray,
-    shading::{Color, write_color},
+    linalg::vec3::{Point3, Vec3, cross, orthogonalise, unit_vector}, media::ppm::ppm_header, ray::Ray, shading::{Color, write_color}
 };
 
 #[derive(Clone)]
@@ -132,10 +130,6 @@ impl Renderer {
         }
     }
 
-    pub fn ppm_header(&self) -> String {
-        format!("P3\n{} {}\n255\n", self.image_width, self.image_height)
-    }
-
     pub fn rays_iter(&self) -> impl Iterator<Item = Ray> {
         (0..self.image_height).rev().flat_map(move |j| {
             (0..self.image_width).rev().map(move |i| {
@@ -147,7 +141,7 @@ impl Renderer {
     }
 
     pub fn render_to_ppm(&self, ray_to_col: impl Fn(Ray) -> Color) {
-        print!("{}", self.ppm_header());
+        print!("{}", ppm_header(self.image_width, self.image_height));
 
         for ray in self.rays_iter() {
             let pixel_color: Color = ray_to_col(ray);

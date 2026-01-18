@@ -1,7 +1,8 @@
+
 use std::io;
 
 use rust_ray_tracer::{
-    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3, dot, unit_vector}, media::renderer::SdfRenderer, random::random_double, ray::Ray, raymarching::{
+    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3, dot, unit_vector}, media::{image::save_frame, ppm::ppm_header, renderer::SdfRenderer, screen::Screen}, random::random_double, ray::Ray, raymarching::{
         march, repetition, rotate, sd_box, sd_plane, sd_sphere, smooth_union, softshadow,
         translate, union,
     }, shading::{Color, shade, write_color}, sphere::Sphere
@@ -18,7 +19,7 @@ fn main() {
         16.0 / 9.0,
     );
 
-    let renderer = Renderer::new(512, 16.0 / 9.0, camera.clone());
+    let screen = Screen::new(512, 16.0 / 9.0);
 
     // Render
 
@@ -41,14 +42,15 @@ fn main() {
 
     let light = Point3::new(1.0, 4.0, 2.0);
 
-    const SAMPLES_PER_PIXEL: i32 = 12;
+    const SAMPLES_PER_PIXEL: i32 = 3;
 
-    print!("{}", renderer.ppm_header());
+    // print!("{}", ppm_header(screen.image_width, screen.image_height));
 
-    let sdf_renderer = SdfRenderer::new(sdf, camera, renderer);
+    let sdf_renderer = SdfRenderer::new(sdf, camera, screen);
 
     let frame = sdf_renderer.monte_carlo_render(SAMPLES_PER_PIXEL);
 
-    sdf_renderer.output_ppm(frame);
+    save_frame(frame, "output.png");
+    // sdf_renderer.output_ppm(frame);
 
 }

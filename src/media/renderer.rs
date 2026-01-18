@@ -1,16 +1,18 @@
 use std::io;
 
-use crate::{camera::{Camera, Renderer}, linalg::vec3::{Point3, dot, unit_vector}, random::random_double, ray::Ray, raymarching::{Sdf, SdfRef, march, softshadow}, shading::{Color, color_to_string, write_color}};
+use crate::{camera::{Camera, Renderer}, linalg::vec3::{Point3, dot, unit_vector}, media::ppm::ppm_header, random::random_double, ray::Ray, raymarching::{Sdf, SdfRef, march, softshadow}, shading::{Color, color_to_string, write_color}};
+
+use super::screen::Screen;
 
 pub struct SdfRenderer {
     sdf: SdfRef,
     camera: Camera,
-    renderer: Renderer,
+    screen: Screen,
 }
 
 impl SdfRenderer {
-    pub fn new(sdf: SdfRef, camera: Camera, renderer: Renderer) -> SdfRenderer {
-        SdfRenderer { sdf: sdf, camera: camera, renderer: renderer }
+    pub fn new(sdf: SdfRef, camera: Camera, screen: Screen) -> SdfRenderer {
+        SdfRenderer { sdf: sdf, camera: camera, screen: screen }
     }
 
     // pub fn render(&self) -> Vec<Vec<Color>> {
@@ -22,13 +24,13 @@ impl SdfRenderer {
 
         let light = Point3::new(1.0, 4.0, 2.0);
 
-        for j in (0..self.renderer.image_height).rev() {
+        for j in (0..self.screen.image_height).rev() {
             let mut row: Vec<Color> = Vec::new();
-            for i in (0..self.renderer.image_width).rev() {
+            for i in (0..self.screen.image_width).rev() {
                 let mut pixel_color = Color::new(0.0, 0.0, 0.0);
                 for _ in 0..samples_per_pixel {
-                    let u = (i as f64 + random_double()) / (self.renderer.image_width - 1) as f64;
-                    let v = (j as f64 + random_double()) / (self.renderer.image_height - 1) as f64;
+                    let u = self.screen.u(i as f64 + random_double());
+                    let v = self.screen.v(j as f64 + random_double());
 
                     let ray = self.camera.get_ray(u, v);
 
@@ -58,7 +60,7 @@ impl SdfRenderer {
     }
 
     pub fn output_ppm(&self, frame: Vec<Vec<Color>>) {
-        print!("{}", self.renderer.ppm_header());
+        print!("{}", ppm_header(self.screen.image_width, self.screen.image_height));
 
         for row in frame {
             for pixel_color in row {

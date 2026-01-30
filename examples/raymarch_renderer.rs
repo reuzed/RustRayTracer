@@ -1,8 +1,5 @@
-use std::io;
-
 use rust_ray_tracer::{
-    camera::{Camera, CameraBuilder, Renderer},
-    constants::INFINITY,
+    camera::CameraBuilder,
     hittable::{HitRecord, Hittable},
     hittable_list::HittableList,
     linalg::vec3::{Point3, Vec3, dot, unit_vector},

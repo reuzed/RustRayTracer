@@ -1,10 +1,20 @@
 use std::io;
 
 use rust_ray_tracer::{
-    camera::{Camera, Renderer}, constants::INFINITY, hittable::{HitRecord, Hittable}, hittable_list::HittableList, linalg::vec3::{Point3, Vec3, dot, unit_vector}, media::ppm::ppm_header, random::random_double, ray::Ray, raymarching::{
+    camera::{Camera, Renderer},
+    constants::INFINITY,
+    hittable::{HitRecord, Hittable},
+    hittable_list::HittableList,
+    linalg::vec3::{Point3, Vec3, dot, unit_vector},
+    media::ppm::ppm_header,
+    random::random_double,
+    ray::Ray,
+    raymarching::{
         march, repetition, rotate, sd_box, sd_plane, sd_sphere, smooth_union, softshadow,
         translate, union,
-    }, shading::{Color, shade, write_color}, sphere::Sphere
+    },
+    shading::{Color, shade, write_color},
+    sphere::Sphere,
 };
 
 fn main() {
@@ -43,7 +53,10 @@ fn main() {
 
     const SAMPLES_PER_PIXEL: i32 = 12;
 
-    print!("{}", ppm_header(renderer.image_width, renderer.image_height));
+    print!(
+        "{}",
+        ppm_header(renderer.image_width, renderer.image_height)
+    );
 
     for j in (0..renderer.image_height).rev() {
         for i in (0..renderer.image_width).rev() {

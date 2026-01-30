@@ -1,7 +1,10 @@
 use std::io;
 
 use crate::{
-    linalg::vec3::{Point3, Vec3, cross, orthogonalise, unit_vector}, media::ppm::ppm_header, ray::Ray, shading::{Color, write_color}
+    linalg::vec3::{Point3, Vec3, cross, orthogonalise, unit_vector},
+    media::ppm::ppm_header,
+    ray::Ray,
+    shading::{Color, write_color},
 };
 
 #[derive(Clone)]

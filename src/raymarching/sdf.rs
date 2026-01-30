@@ -2,19 +2,17 @@
 
 use std::sync::Arc;
 
-use crate::{
-    linalg::{
-        vec2::Vec2,
-        vec3::{Vec3, dot, unit_vector},
-    },
+use crate::linalg::{
+    vec2::Vec2,
+    vec3::{Vec3, dot, unit_vector},
 };
 
 pub trait Sdf: Send + Sync {
     fn distance(&self, point: Vec3) -> f64;
 }
 
-impl <F> Sdf for F 
-where 
+impl<F> Sdf for F
+where
     F: Fn(Vec3) -> f64 + Send + Sync,
 {
     fn distance(&self, point: Vec3) -> f64 {
@@ -24,9 +22,9 @@ where
 
 pub type SdfRef = Arc<dyn Sdf>;
 
-pub fn sdf<F>(f: F) -> SdfRef 
-where 
-    F: Fn(Vec3) -> f64 + Send + Sync + 'static 
+pub fn sdf<F>(f: F) -> SdfRef
+where
+    F: Fn(Vec3) -> f64 + Send + Sync + 'static,
 {
     Arc::new(f)
 }

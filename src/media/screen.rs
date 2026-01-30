@@ -8,7 +8,11 @@ pub struct Screen {
 impl Screen {
     pub fn new(image_width: u32, aspect_ratio: f64) -> Screen {
         let image_height = (image_width as f64 / aspect_ratio) as u32;
-        Screen { aspect_ratio, image_width, image_height }
+        Screen {
+            aspect_ratio,
+            image_width,
+            image_height,
+        }
     }
 
     pub fn u(&self, i: impl Into<f64>) -> f64 {
@@ -23,9 +27,9 @@ impl Screen {
 
     pub fn uv_iter(&self) -> impl Iterator<Item = (f64, f64)> {
         (0..self.image_height).rev().flat_map(move |j| {
-            (0..self.image_width).rev().map(move |i| {
-                (self.u(i), self.v(j))    
-            })
+            (0..self.image_width)
+                .rev()
+                .map(move |i| (self.u(i), self.v(j)))
         })
     }
 }

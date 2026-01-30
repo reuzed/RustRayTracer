@@ -1,6 +1,14 @@
 use std::io;
 
-use crate::{camera::{Camera, Renderer}, linalg::vec3::{Point3, dot, unit_vector}, media::ppm::ppm_header, random::random_double, ray::Ray, raymarching::{Sdf, SdfRef, march, softshadow}, shading::{Color, color_to_string, write_color}};
+use crate::{
+    camera::{Camera, Renderer},
+    linalg::vec3::{Point3, dot, unit_vector},
+    media::ppm::ppm_header,
+    random::random_double,
+    ray::Ray,
+    raymarching::{Sdf, SdfRef, march, softshadow},
+    shading::{Color, color_to_string, write_color},
+};
 
 use super::screen::Screen;
 
@@ -12,7 +20,11 @@ pub struct SdfRenderer {
 
 impl SdfRenderer {
     pub fn new(sdf: SdfRef, camera: Camera, screen: Screen) -> SdfRenderer {
-        SdfRenderer { sdf: sdf, camera: camera, screen: screen }
+        SdfRenderer {
+            sdf: sdf,
+            camera: camera,
+            screen: screen,
+        }
     }
 
     pub fn render(&self) -> Vec<Vec<Color>> {
@@ -30,17 +42,15 @@ impl SdfRenderer {
                 let mut pixel_color = Color::new(0.0, 0.0, 0.0);
                 for _ in 0..samples_per_pixel {
                     // Don't randomise rays if only one sample
-                    let (u,v ) = if samples_per_pixel == 1 {
+                    let (u, v) = if samples_per_pixel == 1 {
                         let u = self.screen.u(i as f64);
                         let v = self.screen.v(j as f64);
-                        (u,v)
-                    }
-                    else {
+                        (u, v)
+                    } else {
                         let u = self.screen.u(i as f64 + random_double());
                         let v = self.screen.v(j as f64 + random_double());
-                        (u,v)
+                        (u, v)
                     };
-                    
 
                     let ray = self.camera.get_ray(u, v);
 
@@ -52,7 +62,8 @@ impl SdfRenderer {
                         let to_light_vec = unit_vector(light - hr.pos);
                         let to_light_ray = Ray::new(hr.pos + 0.0001 * to_light_vec, to_light_vec);
 
-                        let soft_light = softshadow(to_light_ray, 0.1, 300.0, self.sdf.clone(), 2.0);
+                        let soft_light =
+                            softshadow(to_light_ray, 0.1, 300.0, self.sdf.clone(), 2.0);
 
                         let normal_light_proportion = dot(hr.normal, to_light_vec);
                         pixel_color +=
@@ -70,7 +81,10 @@ impl SdfRenderer {
     }
 
     pub fn output_ppm(&self, frame: Vec<Vec<Color>>) {
-        print!("{}", ppm_header(self.screen.image_width, self.screen.image_height));
+        print!(
+            "{}",
+            ppm_header(self.screen.image_width, self.screen.image_height)
+        );
 
         for row in frame {
             for pixel_color in row {

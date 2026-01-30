@@ -8,7 +8,7 @@ pub type Color = Vec3;
 
 pub fn color_to_string(pixel_color: Color) -> String {
     let (r, g, b) = (pixel_color.x(), pixel_color.y(), pixel_color.z());
-    
+
     let r = (clamp(r, 0.0, 0.999) * 256.0) as i32;
     let g = (clamp(g, 0.0, 0.999) * 256.0) as i32;
     let b = (clamp(b, 0.0, 0.999) * 256.0) as i32;

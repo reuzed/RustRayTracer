@@ -6,9 +6,7 @@
 
 // To produce a video, render frames to a folder then run ffmpeg
 
-pub struct VideoWriter {
-    
-}
+pub struct VideoWriter {}
 
 use std::process::Command;
 
@@ -16,12 +14,17 @@ use std::process::Command;
 pub fn make_video() {
     let status = Command::new("ffmpeg")
         .args([
-            "-framerate", "30",
-            "-pattern_type", "glob",
-            "-i", "tmp/image_*.png",
-            "-c:v", "libx264",
-            "-pix_fmt", "yuv420p",
-            "-y",  // Overwrite output without asking
+            "-framerate",
+            "30",
+            "-pattern_type",
+            "glob",
+            "-i",
+            "tmp/image_*.png",
+            "-c:v",
+            "libx264",
+            "-pix_fmt",
+            "yuv420p",
+            "-y", // Overwrite output without asking
             "output.mp4",
         ])
         .status()

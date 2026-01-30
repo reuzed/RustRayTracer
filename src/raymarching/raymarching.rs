@@ -43,6 +43,8 @@ const SHADOW_STEPS: i32 = 256;
 const SHADOW_EPSILON: f64 = 0.001;
 
 pub fn softshadow(ray: Ray, mint: f64, maxt: f64, sdf: SdfRef, penumbra_sharpness: f64) -> f64 {
+    // March a ray towards the light, keep track of the most occluded point along the ray going to the light
+    // This consists of a point nearby the hit, and nearby something else
     let mut light: f64 = 1.0;
     let mut t = mint;
     for _ in 0..SHADOW_STEPS {

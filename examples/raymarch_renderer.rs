@@ -17,18 +17,16 @@ use rust_ray_tracer::{
 fn main() {
     // World
 
-    // let sdf = {
-    //     let sdf1 = sd_sphere(0.5);
-    //     let sdf1 = translate(sdf1, Vec3::new(0.0, 0.0, -1.0));
-    //     let sdf2 = sd_box(Vec3::new(0.3, 0.3, 0.3));
-    //     let sdf2 = translate(sdf2, Vec3::new(1.0, 0.0, -1.5));
-    //     let sdf2 = rotate(sdf2, 5.0, -20.0, 50.0);
-    //     let sdf_floor = sd_plane(Vec3::new(0.0, 1.0, 0.0), 0.0);
-    //     smooth_union(sdf_floor, union(repetition(sdf1, 5.0), repetition(sdf2, 20.0)), 0.2)
-    // };
-
     let sdf = {
+        let sdf1 = sd_sphere(0.5);
+        let sdf1 = translate(sdf1, Vec3::new(0.0, 0.0, -1.0));
+        let sdf2 = sd_box(Vec3::new(0.3, 0.3, 0.3));
+        let sdf2 = translate(sdf2, Vec3::new(1.0, 0.0, -1.5));
+        let sdf2 = rotate(sdf2, 5.0, -20.0, 50.0);
         let sdf_floor = sd_plane(Vec3::new(0.0, 1.0, 0.0), 0.0);
+        let sdf_floor = smooth_union(sdf_floor, union(repetition(sdf1, 5.0), repetition(sdf2, 20.0)), 0.2);
+
+        // let sdf_floor = sd_plane(Vec3::new(0.0, 1.0, 0.0), 0.0);
         let sdf_box = sd_box(Vec3::new(0.3, 2.3, 0.3));
         let sdf_box = translate(sdf_box, Vec3::new(0.0, 2.5, 0.0));
         union(sdf_floor, sdf_box)
@@ -43,13 +41,14 @@ fn main() {
 
     let screen = Screen::new(512, 16.0 / 9.0);
 
-    const SAMPLES_PER_PIXEL: i32 = 1;
+    const SAMPLES_PER_PIXEL: i32 = 3;
 
-    for i in 0..30 {
+    for i in 0..120 {
+        println!("Frame number: {i}");
         camera_builder.position(Vec3::new(
-            5.0 * f64::cos(0.1 * i as f64),
+            15.0 * f64::cos(0.05 * i as f64),
             2.0,
-            5.0 * f64::sin(0.1 * i as f64),
+            15.0 * f64::sin(0.05 * i as f64),
         ));
         let camera = camera_builder.build();
 

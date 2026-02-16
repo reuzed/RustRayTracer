@@ -1,17 +1,10 @@
 use rust_ray_tracer::{
     camera::CameraBuilder,
-    hittable::{HitRecord, Hittable},
-    hittable_list::HittableList,
-    linalg::vec3::{Point3, Vec3, dot, unit_vector},
-    media::{image::save_frame, ppm::ppm_header, renderer::SdfRenderer, screen::Screen},
-    random::random_double,
-    ray::Ray,
+    linalg::vec3::Vec3,
+    media::{image::save_frame, renderer::SdfRenderer, screen::Screen},
     raymarching::{
-        march, repetition, rotate, sd_box, sd_plane, sd_sphere, smooth_union, softshadow,
-        translate, union,
+        repetition, rotate, sd_box, sd_plane, sd_sphere, smooth_union, translate, union,
     },
-    shading::{Color, shade, write_color},
-    sphere::Sphere,
 };
 
 fn main() {
@@ -24,7 +17,11 @@ fn main() {
         let sdf2 = translate(sdf2, Vec3::new(1.0, 0.0, -1.5));
         let sdf2 = rotate(sdf2, 5.0, -20.0, 50.0);
         let sdf_floor = sd_plane(Vec3::new(0.0, 1.0, 0.0), 0.0);
-        let sdf_floor = smooth_union(sdf_floor, union(repetition(sdf1, 5.0), repetition(sdf2, 20.0)), 0.2);
+        let sdf_floor = smooth_union(
+            sdf_floor,
+            union(repetition(sdf1, 5.0), repetition(sdf2, 20.0)),
+            0.2,
+        );
 
         // let sdf_floor = sd_plane(Vec3::new(0.0, 1.0, 0.0), 0.0);
         let sdf_box = sd_box(Vec3::new(0.3, 2.3, 0.3));

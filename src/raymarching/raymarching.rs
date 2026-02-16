@@ -3,7 +3,7 @@
 use crate::{
     linalg::vec3::{Vec3, unit_vector},
     ray::Ray,
-    raymarching::{Sdf, normal},
+    raymarching::normal,
 };
 
 use super::SdfRef;
@@ -46,7 +46,7 @@ pub fn softshadow(ray: Ray, mint: f64, maxt: f64, sdf: SdfRef, penumbra_sharpnes
     // March a ray towards the light, keep track of the most occluded point along the ray going to the light
     // This consists of a point nearby the hit, and nearby something else
     // TODO This can be improved by trying to interpolate the closest position between two raymarch steps,
-    // Consider a pair of (point, distance) pairs, 
+    // Consider a pair of (point, distance) pairs,
     let mut light: f64 = 1.0;
     let mut t = mint;
     let mut lasth = 0.0;

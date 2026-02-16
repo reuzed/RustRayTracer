@@ -4,9 +4,6 @@ use std::io;
 
 use rust_ray_tracer::{
     camera::{Camera, Renderer},
-    constants::INFINITY,
-    hittable::{HitRecord, Hittable},
-    hittable_list::HittableList,
     linalg::vec3::{Point3, Vec3, dot, unit_vector},
     media::ppm::ppm_header,
     random::random_double,
@@ -15,8 +12,7 @@ use rust_ray_tracer::{
         march, repetition, rotate, sd_box, sd_plane, sd_sphere, smooth_union, softshadow,
         translate, union,
     },
-    shading::{Color, shade, write_color},
-    sphere::Sphere,
+    shading::{Color, write_color},
 };
 
 fn main() {
@@ -83,7 +79,7 @@ fn main() {
                     pixel_color += soft_light * normal_light_proportion * Color::new(1.0, 0.3, 0.5)
                 } else {
                     // Sky colour
-                    pixel_color += Color::new(0.3, 0.4, 0.4+v*0.3)
+                    pixel_color += Color::new(0.3, 0.4, 0.4 + v * 0.3)
                 }
             }
             write_color(&mut io::stdout(), pixel_color, SAMPLES_PER_PIXEL);

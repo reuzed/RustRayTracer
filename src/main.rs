@@ -60,7 +60,8 @@ fn main() {
         ppm_header(renderer.image_width, renderer.image_height)
     );
 
-    for j in (0..renderer.image_height).rev() { eprintln!("{j} out of {}", renderer.image_height);
+    for j in (0..renderer.image_height).rev() {
+        eprintln!("{j} out of {}", renderer.image_height);
         for i in (0..renderer.image_width).rev() {
             let mut pixel_color = Color::new(0.0, 0.0, 0.0);
             for _ in 0..SAMPLES_PER_PIXEL {

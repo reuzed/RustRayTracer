@@ -1,3 +1,5 @@
+// cargo run --release --example raymarch > out.ppm
+
 use std::io;
 
 use rust_ray_tracer::{
@@ -73,15 +75,15 @@ fn main() {
                     let hr = res.hr.unwrap();
 
                     let to_light_vec = unit_vector(light - hr.pos);
-                    let to_light_ray = Ray::new(hr.pos + 0.0001 * to_light_vec, to_light_vec);
+                    let to_light_ray = Ray::new(hr.pos, to_light_vec);
 
-                    let soft_light = softshadow(to_light_ray, 0.1, 300.0, sdf.clone(), 2.0);
+                    let soft_light = softshadow(to_light_ray, 0.01, 300.0, sdf.clone(), 2.0);
 
                     let normal_light_proportion = dot(hr.normal, to_light_vec);
                     pixel_color += soft_light * normal_light_proportion * Color::new(1.0, 0.3, 0.5)
                 } else {
                     // Sky colour
-                    pixel_color += Color::new(0.2, 0.3, 0.5)
+                    pixel_color += Color::new(0.3, 0.4, 0.4+v*0.3)
                 }
             }
             write_color(&mut io::stdout(), pixel_color, SAMPLES_PER_PIXEL);

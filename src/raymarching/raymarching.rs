@@ -45,19 +45,33 @@ const SHADOW_EPSILON: f64 = 0.001;
 pub fn softshadow(ray: Ray, mint: f64, maxt: f64, sdf: SdfRef, penumbra_sharpness: f64) -> f64 {
     // March a ray towards the light, keep track of the most occluded point along the ray going to the light
     // This consists of a point nearby the hit, and nearby something else
+    // TODO This can be improved by trying to interpolate the closest position between two raymarch steps,
+    // Consider a pair of (point, distance) pairs, 
     let mut light: f64 = 1.0;
     let mut t = mint;
+    let mut lasth = 0.0;
     for _ in 0..SHADOW_STEPS {
         if t > maxt {
             break;
         }
         let p = ray.at(t);
         let h = sdf.distance(p);
+
         if h < SHADOW_EPSILON {
             return 0.0;
         }
         t += h;
+        // Interpolate soft shadow positions: TODO fix
+        // if lasth != 0.0 {
+        //     // Code from https://iquilezles.org/articles/rmshadows/
+        //     let y = h * h / (2.0 * lasth);
+        //     let d = f64::sqrt(h * h - y * y);
+        //     light = light.min(penumbra_sharpness * d / (t-y));
+        // }
+        // Don't interpolate softshadow:
         light = light.min(penumbra_sharpness * h / t);
+        // Store distance of previous point
+        lasth = h;
     }
     light
 }
